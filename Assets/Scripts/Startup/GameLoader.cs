@@ -1,32 +1,33 @@
 ﻿using System.Collections.Generic;
-using Common;
+using Core;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
+using Zenject;
 
 namespace Startup
 {
     public class GameLoader
     {
-        private const int MainMenuIndex = 1;
+        private readonly SignalBus signalBus;
 
         [UsedImplicitly]
-        public GameLoader()
+        public GameLoader(SignalBus signalBus)
         {
+            this.signalBus = signalBus;
+
             LoadGame().Forget();
         }
 
         private async UniTask LoadGame()
         {
-            var loadSceneTask = SceneLoader.LoadScene(MainMenuIndex);
             var depenencies = LoadDependencies();
 
             await UniTask.WhenAll(depenencies);
             Debug.Log("Dependencies loaded");
 
-            var result = await loadSceneTask;
-            Debug.Log("Main Menu Scene loaded");
-            result.allowSceneActivation = true;
+            signalBus.Fire<DependenciesLoadedSignal>();
+
             Debug.Log("Game Loaded");
         }
 

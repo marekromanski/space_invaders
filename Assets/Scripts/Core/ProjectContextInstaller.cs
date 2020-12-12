@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 
-namespace Common
+namespace Core
 {
     public class ProjectContextInstaller : MonoInstaller
     {
@@ -10,6 +10,9 @@ namespace Common
             SignalBusInstaller.Install(Container);
 
             Container.DeclareSignal<StartGameSignal>();
+            Container.DeclareSignal<DependenciesLoadedSignal>();
+
+            Container.BindInterfacesAndSelfTo<GameFlow>().AsSingle().NonLazy();
 
             Debug.Log("Installed project bindings");
         }

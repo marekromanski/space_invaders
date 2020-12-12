@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Core;
+using UnityEngine;
 using Zenject;
 
 namespace MainMenu
@@ -8,7 +9,6 @@ namespace MainMenu
         public override void InstallBindings()
         {
             Debug.Log("Installing Main Menu bindings");
-            Container.Bind<MainMenuController>().AsSingle().NonLazy();
         }
     }
 }
