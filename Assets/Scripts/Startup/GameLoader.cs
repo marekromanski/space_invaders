@@ -35,7 +35,7 @@ namespace Startup
         {
             Debug.Log("Loading dependencies");
             var dependencies = new List<UniTask>();
-
+            //TODO: load asset bundles here
             return dependencies;
         }
     }

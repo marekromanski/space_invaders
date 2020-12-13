@@ -1,9 +1,11 @@
 ﻿using System;
-using UnityEngine;
+using JetBrains.Annotations;
+using UnityEngine.SceneManagement;
 using Zenject;
 
 namespace Core
 {
+    [UsedImplicitly]
     public class GameFlow : IDisposable
     {
         private const int MainMenuSceneIndex = 1;
@@ -14,27 +16,30 @@ namespace Core
         public GameFlow(SignalBus signalBus)
         {
             this.signalBus = signalBus;
-            Debug.Log("MainMenu controller created");
 
             signalBus.Subscribe<DependenciesLoadedSignal>(OnDependenciesLoaded);
             signalBus.Subscribe<StartGameSignal>(OnStartGameSignalReceived);
         }
 
-        private async void OnDependenciesLoaded()
+        private void OnDependenciesLoaded()
         {
-            SceneLoader.LoadScene(MainMenuSceneIndex);
+            LoadScene(MainMenuSceneIndex);
         }
 
-        private async void OnStartGameSignalReceived()
+        private void OnStartGameSignalReceived()
         {
-            SceneLoader.LoadScene(BattleSceneIndex);
+            LoadScene(BattleSceneIndex);
         }
 
         public void Dispose()
         {
             signalBus.Unsubscribe<DependenciesLoadedSignal>(OnDependenciesLoaded);
             signalBus.Unsubscribe<StartGameSignal>(OnStartGameSignalReceived);
-            Debug.Log("Disposed");
+        }
+
+        private static void LoadScene(int sceneIndex)
+        {
+            SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Single);
         }
     }
 }
