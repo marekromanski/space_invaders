@@ -12,9 +12,4 @@ namespace AssetManagement
 
         public AssetReference PlayerAsset => playerAsset;
     }
-
-    public interface IAssetCache
-    {
-        AssetReference PlayerAsset { get; }
-    }
 }
