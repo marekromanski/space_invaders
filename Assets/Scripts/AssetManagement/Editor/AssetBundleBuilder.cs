@@ -1,17 +1,14 @@
-﻿using Core;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.AddressableAssets.Settings;
 
 namespace AssetManagement
 {
-    public class AssetBundleBuilder : UnityEditor.Editor
+    public class AssetBundleBuilder : Editor
     {
-        [MenuItem("SpaceInvaders/Build Asset Bundles")]
+        [MenuItem("SpaceInvaders/Build Addresables")]
         private static void BuildAssetBundles()
         {
             AddressableAssetSettings.BuildPlayerContent();
-
-            // BuildPipeline.BuildAssetBundles(ProjectConsts.BundlePath, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.Android);
         }
     }
 }
