@@ -73,3 +73,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19c054ec7934489b9a83c4b38d3ad1c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  assetCache: {fileID: 11400000, guid: b5904cbd0144bac42bfc0b33f14b758e, type: 2}

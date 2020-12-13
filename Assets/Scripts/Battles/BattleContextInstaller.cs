@@ -14,7 +14,7 @@ namespace Battles
 
             Container.BindInterfacesAndSelfTo<EditorControls>().AsSingle();
 
-            Container.Bind<IPlayerConfiguration>().FromInstance(playerConfiguration);
+            Container.Bind<IPlayerConfiguration>().FromInstance(playerConfiguration).AsSingle();
         }
     }
 }

@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using AssetManagement;
+using Battles;
 using Core;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Zenject;
 
 namespace Startup
@@ -10,11 +13,13 @@ namespace Startup
     public class GameLoader
     {
         private readonly SignalBus signalBus;
+        private readonly AssetFactory assetFactory;
 
         [UsedImplicitly]
-        public GameLoader(SignalBus signalBus)
+        public GameLoader(SignalBus signalBus, AssetFactory assetFactory)
         {
             this.signalBus = signalBus;
+            this.assetFactory = assetFactory;
 
             LoadGame().Forget();
         }
@@ -26,6 +31,11 @@ namespace Startup
             await UniTask.WhenAll(depenencies);
             Debug.Log("Dependencies loaded");
 
+            var player = assetFactory.GetAsset<GameObject>();
+            Assert.IsNotNull(player);
+            var playerComponent = player.GetComponent<Player>();
+            Assert.IsNotNull(playerComponent);
+
             signalBus.Fire<DependenciesLoadedSignal>();
 
             Debug.Log("Game Loaded");
@@ -35,7 +45,9 @@ namespace Startup
         {
             Debug.Log("Loading dependencies");
             var dependencies = new List<UniTask>();
-            //TODO: load asset bundles here
+
+            dependencies.Add(assetFactory.LoadAssets());
+
             return dependencies;
         }
     }
