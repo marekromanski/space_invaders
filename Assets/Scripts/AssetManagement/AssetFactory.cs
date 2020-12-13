@@ -13,7 +13,7 @@ namespace AssetManagement
     {
         private readonly IAssetCache assetCache;
 
-        private readonly Dictionary<Type, object> loadedAssets = new Dictionary<Type, object>();
+        private readonly Dictionary<string, object> loadedAssets = new Dictionary<string, object>();
 
         [UsedImplicitly]
         public AssetFactory(IAssetCache assetCache)
@@ -23,24 +23,21 @@ namespace AssetManagement
 
         public async UniTask LoadAssets()
         {
-            Debug.Log("Loading assets started");
-            var loadPlayerTask = await LoadAsset<GameObject>(assetCache.PlayerAsset);
+            await LoadAsset<GameObject>(assetCache.PlayerAsset);
         }
 
         public async UniTask<T> LoadAsset<T>(AssetReference asset)
         {
             Assert.IsNotNull(asset);
             var loadedAsset = await asset.LoadAssetAsync<T>().ToUniTask();
-            Debug.Log("Asset loaded");
-            loadedAssets.Add(typeof(T), loadedAsset);
-            Debug.Log("asset saved");
+            loadedAssets.Add(asset.AssetGUID, loadedAsset);
             return loadedAsset;
         }
 
-        public T GetAsset<T>()
+        public T GetAsset<T>(AssetReference assetReference)
         {
             Assert.IsTrue(loadedAssets.Count > 0);
-            return (T) loadedAssets[typeof(T)];
+            return (T) loadedAssets[assetReference.AssetGUID];
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using AssetManagement;
-using Battles;
 using Core;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Assertions;
 using Zenject;
 
 namespace Startup
@@ -31,22 +29,14 @@ namespace Startup
             await UniTask.WhenAll(depenencies);
             Debug.Log("Dependencies loaded");
 
-            var player = assetFactory.GetAsset<GameObject>();
-            Assert.IsNotNull(player);
-            var playerComponent = player.GetComponent<Player>();
-            Assert.IsNotNull(playerComponent);
-
             signalBus.Fire<DependenciesLoadedSignal>();
-
-            Debug.Log("Game Loaded");
         }
 
         private IEnumerable<UniTask> LoadDependencies()
         {
             Debug.Log("Loading dependencies");
-            var dependencies = new List<UniTask>();
+            var dependencies = new List<UniTask> {assetFactory.LoadAssets()};
 
-            dependencies.Add(assetFactory.LoadAssets());
 
             return dependencies;
         }
