@@ -1,15 +1,32 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Linq;
+using Battles.Entities;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace AssetManagement
 {
     [CreateAssetMenu(menuName = "SpaceInvaders/AssetsCache", fileName = "AssetsCache")]
-
     public class AssetCache : ScriptableObject, IAssetCache
     {
         [SerializeField]
         private AssetReference playerAsset;
 
-        public AssetReference PlayerAsset => playerAsset;
+        [SerializeField]
+        private EnemyAsset[] enemyAssets;
+
+        public AssetReference GetPlayerAsset() => playerAsset;
+
+        public AssetReference GetEnemyAsset(EnemyType type)
+        {
+            return enemyAssets.First(x => x.type == type).asset;
+        }
+
+        [Serializable]
+        private class EnemyAsset
+        {
+            public EnemyType type;
+            public AssetReference asset;
+        }
     }
 }

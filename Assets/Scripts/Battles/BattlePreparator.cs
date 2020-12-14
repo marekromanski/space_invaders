@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using Battles.Entities;
+using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;
 
@@ -8,12 +9,15 @@ namespace Battles
     {
         [SerializeField]
         private Transform playerSpawnPosition;
-        
-        private IPlayerFactory factory;
+
+        [SerializeField]
+        private Transform enemySpawnPosition;
+
+        private IEntitiesFactory factory;
         private DiContainer diContainer;
 
         [Inject, UsedImplicitly]
-        private void Construct(IPlayerFactory factory, DiContainer diContainer)
+        private void Construct(IEntitiesFactory factory, DiContainer diContainer)
         { 
             this.factory = factory;
             this.diContainer = diContainer;
@@ -22,6 +26,12 @@ namespace Battles
         private void Start()
         {
             SpawnPlayer();
+            SpawnEnemies();
+        }
+
+        private void SpawnEnemies()
+        {
+            factory.InstantiateEnemy(EnemyType.MotherShip, diContainer, enemySpawnPosition.position, Quaternion.identity);
         }
 
         private void SpawnPlayer()

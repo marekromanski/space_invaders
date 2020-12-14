@@ -23,6 +23,24 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
+  - m_GUID: 6e6bab4f2ea9d9540b84ab4aa6a6f5fa
+    m_Address: Assets/Prefabs/EnemyElite.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 936843600c052884ba037693a8649ef4
+    m_Address: Assets/Prefabs/MotherShip.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6e0086548e78d124fbdf4069536e84e3
+    m_Address: Assets/Prefabs/EnemyRegular.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ba28b678fa9ca7b44bf9166c13564999, type: 2}
   m_SchemaSet:

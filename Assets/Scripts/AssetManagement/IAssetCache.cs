@@ -1,9 +1,11 @@
-﻿using UnityEngine.AddressableAssets;
+﻿using Battles.Entities;
+using UnityEngine.AddressableAssets;
 
 namespace AssetManagement
 {
     public interface IAssetCache
     {
-        AssetReference PlayerAsset { get; }
+        AssetReference GetPlayerAsset();
+        AssetReference GetEnemyAsset(EnemyType type);
     }
 }

@@ -16,3 +16,19 @@ MonoBehaviour:
     m_AssetGUID: 7bae976cd42ff8a46a97a1ce0ecb2162
     m_SubObjectName: 
     m_SubObjectType: 
+  enemyAssets:
+  - type: 0
+    asset:
+      m_AssetGUID: 6e0086548e78d124fbdf4069536e84e3
+      m_SubObjectName: 
+      m_SubObjectType: 
+  - type: 1
+    asset:
+      m_AssetGUID: 6e6bab4f2ea9d9540b84ab4aa6a6f5fa
+      m_SubObjectName: 
+      m_SubObjectType: 
+  - type: 2
+    asset:
+      m_AssetGUID: 936843600c052884ba037693a8649ef4
+      m_SubObjectName: 
+      m_SubObjectType: 

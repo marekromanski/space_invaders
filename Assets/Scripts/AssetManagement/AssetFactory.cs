@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Battles;
+using Battles.Entities;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -9,7 +11,7 @@ using Zenject;
 
 namespace AssetManagement
 {
-    public class AssetFactory : IPlayerFactory
+    public class AssetFactory : IEntitiesFactory
     {
         private readonly IAssetCache assetCache;
 
@@ -23,7 +25,22 @@ namespace AssetManagement
 
         public async UniTask LoadAssets()
         {
-            await LoadAsset<GameObject>(assetCache.PlayerAsset);
+            var loadAssetTasks = StartLoadingEnemies();
+            loadAssetTasks.Add(LoadAsset<GameObject>(assetCache.GetPlayerAsset()));
+
+            await UniTask.WhenAll(loadAssetTasks);
+        }
+
+        private List<UniTask<GameObject>> StartLoadingEnemies()
+        {
+            var enemyTypes = (EnemyType[]) Enum.GetValues(typeof(EnemyType));
+            var loadEnemiesTask = new List<UniTask<GameObject>>(enemyTypes.Length);
+            foreach (var enemyType in enemyTypes)
+            {
+                loadEnemiesTask.Add(LoadAsset<GameObject>(assetCache.GetEnemyAsset(enemyType)));
+            }
+
+            return loadEnemiesTask;
         }
 
         private async UniTask<T> LoadAsset<T>(AssetReference asset)
@@ -34,15 +51,24 @@ namespace AssetManagement
             return loadedAsset;
         }
 
-        public Player InstantiatePlayer(DiContainer diContainer, Vector3 position, Quaternion rotation, Transform parent = null)
+        public Player InstantiatePlayer(DiContainer diContainer, Vector3 position, Quaternion rotation,
+            Transform parent = null)
         {
-            var playerObject = GetAsset<GameObject>(assetCache.PlayerAsset);
+            var playerObject = GetAsset<GameObject>(assetCache.GetPlayerAsset());
 
-            var playerInstance = Instantiate<Player>(diContainer, playerObject, position, rotation, parent);
-            return playerInstance;
+            return Instantiate<Player>(diContainer, playerObject, position, rotation, parent);
         }
 
-        private T Instantiate<T>(DiContainer diContainer, GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)
+        public Enemy InstantiateEnemy(EnemyType enemyType, DiContainer diContainer, Vector3 position,
+            Quaternion rotation, Transform parent = null)
+        {
+            var enemyObject = GetAsset<GameObject>(assetCache.GetEnemyAsset(enemyType));
+
+            return Instantiate<Enemy>(diContainer, enemyObject, position, rotation, parent);
+        }
+
+        private T Instantiate<T>(DiContainer diContainer, GameObject prefab, Vector3 position, Quaternion rotation,
+            Transform parent = null)
         {
             T component = default;
 

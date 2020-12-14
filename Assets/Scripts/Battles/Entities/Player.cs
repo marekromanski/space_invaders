@@ -2,7 +2,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace Battles
+namespace Battles.Entities
 {
     public class Player : MonoBehaviour
     {
