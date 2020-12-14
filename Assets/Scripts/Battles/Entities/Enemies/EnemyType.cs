@@ -1,4 +1,4 @@
-﻿namespace Battles.Entities
+﻿namespace Battles.Entities.Enemies
 {
     public enum EnemyType
     {

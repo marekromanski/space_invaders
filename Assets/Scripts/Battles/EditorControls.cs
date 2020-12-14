@@ -30,6 +30,16 @@ namespace Battles
             {
                 signalBus.Fire(new PlayerMovedSignal(delta));
             }
+
+            if (PlayerShotBullet())
+            {
+                signalBus.Fire<PlayerShotSignal>();
+            }
+        }
+
+        private bool PlayerShotBullet()
+        {
+            return Input.GetKey(KeyCode.Space);
         }
 
         private static bool PlayerMovedRight()

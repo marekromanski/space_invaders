@@ -1,13 +1,23 @@
-﻿using JetBrains.Annotations;
+﻿using Battles.Entities.Projectiles;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Zenject;
 
-namespace Battles.Entities
+namespace Battles.Entities.Player
 {
-    public class Player : MonoBehaviour
+    public class PlayerMb : MonoBehaviour
     {
+        [SerializeField]
+        private Transform projectileSpawnPosition;
+        
         private SignalBus signalBus;
         private IPlayerConfiguration playerConfiguration;
+
+        private void Awake()
+        {
+            Assert.IsNotNull(projectileSpawnPosition);
+        }
 
         [Inject, UsedImplicitly]
         private void Construct(SignalBus signalBus, IPlayerConfiguration playerConfiguration)
@@ -16,7 +26,15 @@ namespace Battles.Entities
             this.playerConfiguration = playerConfiguration;
 
             signalBus.Subscribe<PlayerMovedSignal>(OnPlayerMoved);
+            signalBus.Subscribe<PlayerShotSignal>(OnPlayerShot);
         }
+
+        private void OnPlayerShot()
+        {
+            var velocity = playerConfiguration.ProjectileVelocity;
+            signalBus.Fire(new SpawnProjectileSignal(projectileSpawnPosition.position, velocity, ProjectileDirection.Up));
+        }
+
 
         private void OnPlayerMoved(PlayerMovedSignal signal)
         {
@@ -29,6 +47,7 @@ namespace Battles.Entities
         private void OnDestroy()
         {
             signalBus.Unsubscribe<PlayerMovedSignal>(OnPlayerMoved);
+            signalBus.Unsubscribe<PlayerShotSignal>(OnPlayerShot);
         }
     }
 }

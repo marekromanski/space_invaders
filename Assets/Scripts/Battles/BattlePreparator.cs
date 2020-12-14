@@ -1,4 +1,5 @@
 ﻿using Battles.Entities;
+using Battles.Entities.Enemies;
 using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;

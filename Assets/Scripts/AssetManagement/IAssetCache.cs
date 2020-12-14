@@ -1,4 +1,5 @@
 ﻿using Battles.Entities;
+using Battles.Entities.Enemies;
 using UnityEngine.AddressableAssets;
 
 namespace AssetManagement

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Battles.Entities;
+using Battles.Entities.Enemies;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 

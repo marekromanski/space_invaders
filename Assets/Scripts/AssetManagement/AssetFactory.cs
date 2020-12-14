@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Battles;
 using Battles.Entities;
+using Battles.Entities.Enemies;
+using Battles.Entities.Player;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -51,20 +53,20 @@ namespace AssetManagement
             return loadedAsset;
         }
 
-        public Player InstantiatePlayer(DiContainer diContainer, Vector3 position, Quaternion rotation,
+        public PlayerMb InstantiatePlayer(DiContainer diContainer, Vector3 position, Quaternion rotation,
             Transform parent = null)
         {
             var playerObject = GetAsset<GameObject>(assetCache.GetPlayerAsset());
 
-            return Instantiate<Player>(diContainer, playerObject, position, rotation, parent);
+            return Instantiate<PlayerMb>(diContainer, playerObject, position, rotation, parent);
         }
 
-        public Enemy InstantiateEnemy(EnemyType enemyType, DiContainer diContainer, Vector3 position,
+        public EnemyMb InstantiateEnemy(EnemyType enemyType, DiContainer diContainer, Vector3 position,
             Quaternion rotation, Transform parent = null)
         {
             var enemyObject = GetAsset<GameObject>(assetCache.GetEnemyAsset(enemyType));
 
-            return Instantiate<Enemy>(diContainer, enemyObject, position, rotation, parent);
+            return Instantiate<EnemyMb>(diContainer, enemyObject, position, rotation, parent);
         }
 
         private T Instantiate<T>(DiContainer diContainer, GameObject prefab, Vector3 position, Quaternion rotation,
