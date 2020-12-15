@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
   moveMultiplier: 4
+  projectileVelocity: 8
+  maxShootingFrequency: 0.3
