@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 680bef2dee9b469ba04f56ad5ba9da2a, type: 3}
   m_Name: AssetsCache
   m_EditorClassIdentifier: 
+  projectileAsset:
+    m_AssetGUID: 5b296073b5f68d3459ef7c3dc812871a
+    m_SubObjectName: 
+    m_SubObjectType: 
   playerAsset:
     m_AssetGUID: 7bae976cd42ff8a46a97a1ce0ecb2162
     m_SubObjectName: 

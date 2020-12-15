@@ -4,5 +4,7 @@
     {
         float MoveSpeed { get; }
         float ProjectileVelocity { get; }
+
+        float MaxShootingFrequency { get; }
     }
 }

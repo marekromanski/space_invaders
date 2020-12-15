@@ -1,6 +1,6 @@
 ﻿namespace Battles
 {
-    public class PlayerShotSignal
+    public class ShotAttemptSignal
     {
     }
 }

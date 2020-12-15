@@ -34,12 +34,12 @@ namespace AssetManagement
             await UniTask.WhenAll(loadAssetTasks);
         }
 
-        public PlayerMb InstantiatePlayer(IInstantiator instantiator, Vector3 position, Quaternion rotation,
+        public PlayerEntity InstantiatePlayer(IInstantiator instantiator, Vector3 position, Quaternion rotation,
             Transform parent = null)
         {
             var playerObject = GetAsset<GameObject>(assetCache.GetPlayerAsset());
 
-            return Instantiate<PlayerMb>(instantiator, playerObject, position, rotation, parent);
+            return Instantiate<PlayerEntity>(instantiator, playerObject, position, rotation, parent);
         }
 
         public EnemyMb InstantiateEnemy(EnemyType enemyType, IInstantiator instantiator, Vector3 position,

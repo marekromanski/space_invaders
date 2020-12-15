@@ -33,7 +33,7 @@ namespace Battles
 
             if (PlayerShotBullet())
             {
-                signalBus.Fire<PlayerShotSignal>();
+                signalBus.Fire<ShotAttemptSignal>();
             }
         }
 

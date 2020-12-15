@@ -13,7 +13,7 @@ namespace Battles
         public override void InstallBindings()
         {
             Container.DeclareSignal<PlayerMovedSignal>();
-            Container.DeclareSignal<PlayerShotSignal>();
+            Container.DeclareSignal<ShotAttemptSignal>();
             Container.DeclareSignal<SpawnProjectileSignal>();
 
             Container.BindInterfacesAndSelfTo<EditorControls>().AsSingle();
