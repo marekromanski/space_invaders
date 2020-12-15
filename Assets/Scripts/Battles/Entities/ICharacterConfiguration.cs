@@ -6,6 +6,6 @@
         float ProjectileVelocity { get; }
         float ProjectileLifetime { get; }
 
-        float MaxShootingFrequency { get; }
+        float MinShootingInterval { get; }
     }
 }

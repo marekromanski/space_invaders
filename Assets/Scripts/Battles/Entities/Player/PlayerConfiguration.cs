@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Battles.Entities.Player
 {
@@ -14,12 +15,12 @@ namespace Battles.Entities.Player
         [SerializeField]
         private float projectileLifetime;
 
-        [SerializeField]
-        private float maxShootingFrequency;
+        [FormerlySerializedAs("maxShootingFrequency")] [SerializeField]
+        private float minShootingInterval;
 
         public float MoveSpeed => moveMultiplier;
         public float ProjectileVelocity => projectileVelocity;
         public float ProjectileLifetime => projectileLifetime;
-        public float MaxShootingFrequency => maxShootingFrequency;
+        public float MinShootingInterval => minShootingInterval;
     }
 }
