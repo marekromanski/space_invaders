@@ -17,6 +17,7 @@ namespace Battles
             Container.DeclareSignal<SpawnProjectileSignal>();
 
             Container.BindInterfacesAndSelfTo<EditorControls>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ProjectileManager>().AsSingle();
 
             Container.Bind<IPlayerConfiguration>().FromInstance(playerConfiguration).AsSingle();
         }

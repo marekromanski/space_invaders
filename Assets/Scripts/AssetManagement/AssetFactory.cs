@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Battles;
 using Battles.Entities;
 using Battles.Entities.Enemies;
 using Battles.Entities.Player;
+using Battles.Entities.Projectiles;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -27,13 +27,39 @@ namespace AssetManagement
 
         public async UniTask LoadAssets()
         {
-            var loadAssetTasks = StartLoadingEnemies();
+            var loadAssetTasks = LoadEnemies();
             loadAssetTasks.Add(LoadAsset<GameObject>(assetCache.GetPlayerAsset()));
+            loadAssetTasks.Add(LoadAsset<GameObject>(assetCache.GetProjectileAsset()));
 
             await UniTask.WhenAll(loadAssetTasks);
         }
 
-        private List<UniTask<GameObject>> StartLoadingEnemies()
+        public PlayerMb InstantiatePlayer(IInstantiator instantiator, Vector3 position, Quaternion rotation,
+            Transform parent = null)
+        {
+            var playerObject = GetAsset<GameObject>(assetCache.GetPlayerAsset());
+
+            return Instantiate<PlayerMb>(instantiator, playerObject, position, rotation, parent);
+        }
+
+        public EnemyMb InstantiateEnemy(EnemyType enemyType, IInstantiator instantiator, Vector3 position,
+            Quaternion rotation, Transform parent = null)
+        {
+            var enemyObject = GetAsset<GameObject>(assetCache.GetEnemyAsset(enemyType));
+
+            return Instantiate<EnemyMb>(instantiator, enemyObject, position, rotation, parent);
+        }
+        
+        public ProjectileMb InstantiateProjectile(IInstantiator instantiator, Vector3 position,
+            Quaternion rotation, Transform parent = null)
+        {
+            var projectileAsset = GetAsset<GameObject>(assetCache.GetProjectileAsset());
+
+            return Instantiate<ProjectileMb>(instantiator, projectileAsset, position, rotation, parent);
+        }
+
+
+        private List<UniTask<GameObject>> LoadEnemies()
         {
             var enemyTypes = (EnemyType[]) Enum.GetValues(typeof(EnemyType));
             var loadEnemiesTask = new List<UniTask<GameObject>>(enemyTypes.Length);
@@ -53,30 +79,14 @@ namespace AssetManagement
             return loadedAsset;
         }
 
-        public PlayerMb InstantiatePlayer(DiContainer diContainer, Vector3 position, Quaternion rotation,
-            Transform parent = null)
-        {
-            var playerObject = GetAsset<GameObject>(assetCache.GetPlayerAsset());
-
-            return Instantiate<PlayerMb>(diContainer, playerObject, position, rotation, parent);
-        }
-
-        public EnemyMb InstantiateEnemy(EnemyType enemyType, DiContainer diContainer, Vector3 position,
-            Quaternion rotation, Transform parent = null)
-        {
-            var enemyObject = GetAsset<GameObject>(assetCache.GetEnemyAsset(enemyType));
-
-            return Instantiate<EnemyMb>(diContainer, enemyObject, position, rotation, parent);
-        }
-
-        private T Instantiate<T>(DiContainer diContainer, GameObject prefab, Vector3 position, Quaternion rotation,
+        private T Instantiate<T>(IInstantiator instantiator, GameObject prefab, Vector3 position, Quaternion rotation,
             Transform parent = null)
         {
             T component = default;
 
-            if (prefab != null && diContainer != null)
+            if (prefab != null && instantiator != null)
             {
-                component = diContainer.InstantiatePrefabForComponent<T>(prefab, position, rotation, parent);
+                component = instantiator.InstantiatePrefabForComponent<T>(prefab, position, rotation, parent);
             }
 
             return component;

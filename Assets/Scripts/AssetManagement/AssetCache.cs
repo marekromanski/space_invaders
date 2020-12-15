@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Battles.Entities;
 using Battles.Entities.Enemies;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -11,12 +10,16 @@ namespace AssetManagement
     public class AssetCache : ScriptableObject, IAssetCache
     {
         [SerializeField]
+        private AssetReference projectileAsset;
+
+        [SerializeField]
         private AssetReference playerAsset;
 
         [SerializeField]
         private EnemyAsset[] enemyAssets;
 
         public AssetReference GetPlayerAsset() => playerAsset;
+        public AssetReference GetProjectileAsset() => projectileAsset;
 
         public AssetReference GetEnemyAsset(EnemyType type)
         {

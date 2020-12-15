@@ -1,15 +1,10 @@
 ﻿using Battles.Entities.Enemies;
-using UnityEngine;
-using Zenject;
+using Battles.Entities.Player;
+using Battles.Entities.Projectiles;
 
 namespace Battles.Entities
 {
-    public interface IEntitiesFactory
+    public interface IEntitiesFactory : IPlayerFactory, IEnemiesFactory, IProjectileFactory
     {
-        Player.PlayerMb InstantiatePlayer(DiContainer diContainer, Vector3 position, Quaternion rotation,
-            Transform parent = null);
-
-        EnemyMb InstantiateEnemy(EnemyType enemyType, DiContainer diContainer, Vector3 position, Quaternion rotation,
-            Transform parent = null);
     }
 }

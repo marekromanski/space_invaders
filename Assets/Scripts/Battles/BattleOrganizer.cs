@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Battles
 {
-    public class BattlePreparator : MonoBehaviour
+    public class BattleOrganizer : MonoBehaviour
     {
         [SerializeField]
         private Transform playerSpawnPosition;

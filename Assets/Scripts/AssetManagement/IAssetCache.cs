@@ -1,5 +1,4 @@
-﻿using Battles.Entities;
-using Battles.Entities.Enemies;
+﻿using Battles.Entities.Enemies;
 using UnityEngine.AddressableAssets;
 
 namespace AssetManagement
@@ -8,5 +7,6 @@ namespace AssetManagement
     {
         AssetReference GetPlayerAsset();
         AssetReference GetEnemyAsset(EnemyType type);
+        AssetReference GetProjectileAsset();
     }
 }
