@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 namespace Battles.Entities.Enemies
@@ -14,6 +15,11 @@ namespace Battles.Entities.Enemies
         {
             public EnemyType type;
             public EnemyConfiguration configuration;
+        }
+
+        public ICharacterConfiguration GetEnemyConfiguration(EnemyType type)
+        {
+            return enemies.First(x => x.type == type).configuration;
         }
     }
 }

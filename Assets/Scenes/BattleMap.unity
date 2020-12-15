@@ -696,6 +696,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerConfiguration: {fileID: 11400000, guid: 22dc5d66da7c42046ba3c8f04257ee82,
     type: 2}
+  enemiesConfiguration: {fileID: 11400000, guid: 3ad1e02437ca2c945b28ff4442bc87f1,
+    type: 2}
 --- !u!1 &774362827
 GameObject:
   m_ObjectHideFlags: 0

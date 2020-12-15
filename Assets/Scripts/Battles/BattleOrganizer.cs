@@ -32,7 +32,8 @@ namespace Battles
 
         private void SpawnEnemies()
         {
-            factory.InstantiateEnemy(EnemyType.MotherShip, diContainer, enemySpawnPosition.position, Quaternion.identity);
+            var enemy = factory.InstantiateEnemy(EnemyType.MotherShip, diContainer, enemySpawnPosition.position, Quaternion.identity);
+            enemy.Init(EnemyType.MotherShip);
         }
 
         private void SpawnPlayer()

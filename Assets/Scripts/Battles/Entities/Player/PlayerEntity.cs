@@ -29,7 +29,13 @@ namespace Battles.Entities.Player
 
             AddShootingComponent();
 
+            signalBus.Subscribe<ShotAttemptSignal>(OnShotAttempt);
             signalBus.Subscribe<PlayerMovedSignal>(OnPlayerMoved);
+        }
+
+        private void OnShotAttempt()
+        {
+            shootingomponent.AttemptShot();
         }
 
         private void AddShootingComponent()
@@ -52,7 +58,7 @@ namespace Battles.Entities.Player
         private void OnDestroy()
         {
             signalBus.Unsubscribe<PlayerMovedSignal>(OnPlayerMoved);
-            shootingomponent.Dispose();
+            signalBus.Unsubscribe<ShotAttemptSignal>(OnShotAttempt);
         }
     }
 }

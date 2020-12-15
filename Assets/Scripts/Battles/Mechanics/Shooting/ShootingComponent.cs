@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Battles.Mechanics.Shooting.StateMachine;
 using Zenject;
 
 namespace Battles.Mechanics.Shooting
 {
-    public class ShootingComponent : IDisposable
+    public class ShootingComponent
     {
         private readonly ShootingParameters parameters;
         private readonly SignalBus signalBus;
@@ -21,8 +20,6 @@ namespace Battles.Mechanics.Shooting
             this.signalBus = signalBus;
 
             InitializeStateMachine();
-
-            signalBus.Subscribe<ShotAttemptSignal>(OnShotAttempt);
         }
 
         private void InitializeStateMachine()
@@ -44,14 +41,9 @@ namespace Battles.Mechanics.Shooting
             }
         }
 
-        private void OnShotAttempt()
+        public void AttemptShot()
         {
             MakeTransition(ShootingStates.Firing);
-        }
-
-        public void Dispose()
-        {
-            signalBus.Unsubscribe<ShotAttemptSignal>(OnShotAttempt);
         }
     }
 }

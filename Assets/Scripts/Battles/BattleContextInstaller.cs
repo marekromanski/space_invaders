@@ -1,4 +1,4 @@
-﻿using Battles.Entities;
+﻿using Battles.Entities.Enemies;
 using Battles.Entities.Player;
 using Battles.Entities.Projectiles;
 using UnityEngine;
@@ -11,6 +11,9 @@ namespace Battles
         [SerializeField]
         private PlayerConfiguration playerConfiguration;
 
+        [SerializeField]
+        private EnemiesConfiguration enemiesConfiguration;
+
         public override void InstallBindings()
         {
             Container.DeclareSignal<PlayerMovedSignal>();
@@ -21,6 +24,7 @@ namespace Battles
             Container.BindInterfacesAndSelfTo<ProjectileManager>().AsSingle();
 
             Container.Bind<IPlayerConfiguration>().FromInstance(playerConfiguration).AsSingle();
+            Container.Bind<IEnemiesConfiguration>().FromInstance(enemiesConfiguration).AsSingle();
         }
     }
 }

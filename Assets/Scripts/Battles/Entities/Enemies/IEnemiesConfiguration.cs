@@ -2,5 +2,6 @@
 {
     public interface IEnemiesConfiguration
     {
+        ICharacterConfiguration GetEnemyConfiguration(EnemyType type);
     }
 }

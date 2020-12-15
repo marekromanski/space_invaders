@@ -42,12 +42,12 @@ namespace AssetManagement
             return Instantiate<PlayerEntity>(instantiator, playerObject, position, rotation, parent);
         }
 
-        public EnemyMb InstantiateEnemy(EnemyType enemyType, IInstantiator instantiator, Vector3 position,
+        public EnemyEntity InstantiateEnemy(EnemyType enemyType, IInstantiator instantiator, Vector3 position,
             Quaternion rotation, Transform parent = null)
         {
             var enemyObject = GetAsset<GameObject>(assetCache.GetEnemyAsset(enemyType));
 
-            return Instantiate<EnemyMb>(instantiator, enemyObject, position, rotation, parent);
+            return Instantiate<EnemyEntity>(instantiator, enemyObject, position, rotation, parent);
         }
         
         public ProjectileMb InstantiateProjectile(IInstantiator instantiator, Vector3 position,
