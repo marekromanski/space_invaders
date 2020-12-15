@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Battles.Entities.Projectiles
 {
-    public class ProjectileManager : IDisposable
+    public class ProjectileManager : IDisposable, ITickable
     {
         private readonly SignalBus signalBus;
         private readonly IProjectileFactory projectileFactory;
@@ -57,6 +57,19 @@ namespace Battles.Entities.Projectiles
         public void Dispose()
         {
             signalBus.Unsubscribe<SpawnProjectileSignal>(OnSpawnProjectileSignal);
+        }
+
+        public void Tick()
+        {
+            MoveProjectiles();
+        }
+
+        private void MoveProjectiles()
+        {
+            foreach (var projectile in activeProjectiles)
+            {
+                projectile.Move();
+            }
         }
     }
 }

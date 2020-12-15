@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 
 namespace Battles.Entities.Projectiles
@@ -15,7 +14,7 @@ namespace Battles.Entities.Projectiles
             this.direction = direction;
         }
 
-        private void Update()
+        public void Move()
         {
             var currentPosition = transform.position;
             var normalizedDelta = direction == ProjectileDirection.Up ? 1f : -1f;
