@@ -1,17 +1,22 @@
-﻿using UnityEngine;
+﻿using Battles.Mechanics.LimitedLifetime;
+using UnityEngine;
 using Zenject;
 
 namespace Battles.Entities.Projectiles
 {
-    public class ProjectileMb : MonoBehaviour, IPoolable
+    public class ProjectileMb : MonoBehaviour, IPoolable, ITimeLimited
     {
         private float velocity;
         private ProjectileDirection direction;
 
-        public void SetVelocity(float velocity, ProjectileDirection direction)
+        private LifetimeComponent lifetimeComponent;
+
+        public void SetCharacteristics(float velocity, ProjectileDirection direction, float lifeTime)
         {
             this.velocity = velocity;
             this.direction = direction;
+
+            lifetimeComponent = new LifetimeComponent(lifeTime);
         }
 
         public void Move()
@@ -23,14 +28,20 @@ namespace Battles.Entities.Projectiles
             transform.position = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * velocity);
         }
 
-        public void OnDespawned()
-        {
-            gameObject.SetActive(false);
-        }
-
         public void OnSpawned()
         {
             gameObject.SetActive(true);
+        }
+
+        public void OnDespawned()
+        {
+            gameObject.SetActive(false);
+            lifetimeComponent = null;
+        }
+
+        public bool TimeElapsed()
+        {
+            return lifetimeComponent.TimeElapsed();
         }
     }
 }

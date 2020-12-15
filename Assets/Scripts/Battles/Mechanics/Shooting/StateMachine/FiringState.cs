@@ -17,7 +17,7 @@ namespace Battles.Mechanics.Shooting.StateMachine
         
         public override async void Enter()
         {
-            signalBus.Fire(new SpawnProjectileSignal(parameters.spawn.position, parameters.projectileVelocity, parameters.direction));
+            signalBus.Fire(new SpawnProjectileSignal(parameters.spawn.position, parameters.projectileVelocity, parameters.direction, parameters.lifeTime));
 
             await UniTask.DelayFrame(1);
             component.MakeTransition(ShootingStates.Reloading);

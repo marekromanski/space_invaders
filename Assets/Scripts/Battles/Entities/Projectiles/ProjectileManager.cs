@@ -36,7 +36,7 @@ namespace Battles.Entities.Projectiles
         {
             var rotation = directionToRotationMapping[signal.direction];
             var projectile = InstantiateProjectile(signal.position, rotation);
-            projectile.SetVelocity(signal.velocity, signal.direction);
+            projectile.SetCharacteristics(signal.velocity, signal.direction, signal.lifeTime);
 
             activeProjectiles.Add(projectile);
         }
@@ -61,7 +61,22 @@ namespace Battles.Entities.Projectiles
 
         public void Tick()
         {
+            CheckProjectilesLifeTime();
             MoveProjectiles();
+        }
+
+        private void CheckProjectilesLifeTime()
+        {
+            for (var i = activeProjectiles.Count - 1; i >= 0; --i)
+            {
+                var projectile = activeProjectiles[i];
+                if (projectile.TimeElapsed())
+                {
+                    activeProjectiles.RemoveAt(i);
+                    projectile.OnDespawned();
+                    projectilePool.Push(projectile);
+                }
+            }
         }
 
         private void MoveProjectiles()

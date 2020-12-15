@@ -12,10 +12,14 @@ namespace Battles.Entities.Player
         private float projectileVelocity;
 
         [SerializeField]
+        private float projectileLifetime;
+
+        [SerializeField]
         private float maxShootingFrequency;
 
         public float MoveSpeed => moveMultiplier;
         public float ProjectileVelocity => projectileVelocity;
+        public float ProjectileLifetime => projectileLifetime;
         public float MaxShootingFrequency => maxShootingFrequency;
     }
 }

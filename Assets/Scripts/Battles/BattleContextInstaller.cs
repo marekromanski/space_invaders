@@ -1,4 +1,5 @@
-﻿using Battles.Entities.Player;
+﻿using Battles.Entities;
+using Battles.Entities.Player;
 using Battles.Entities.Projectiles;
 using UnityEngine;
 using Zenject;
@@ -19,7 +20,7 @@ namespace Battles
             Container.BindInterfacesAndSelfTo<EditorControls>().AsSingle();
             Container.BindInterfacesAndSelfTo<ProjectileManager>().AsSingle();
 
-            Container.Bind<IPlayerConfiguration>().FromInstance(playerConfiguration).AsSingle();
+            Container.Bind<ICharacterConfiguration>().FromInstance(playerConfiguration).AsSingle();
         }
     }
 }

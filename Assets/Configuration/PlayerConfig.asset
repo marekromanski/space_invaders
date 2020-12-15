@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveMultiplier: 4
   projectileVelocity: 8
+  projectileLifetime: 3
   maxShootingFrequency: 0.3

@@ -13,7 +13,7 @@ namespace Battles.Entities.Player
         private Transform projectileSpawnPosition;
 
         private SignalBus signalBus;
-        private IPlayerConfiguration playerConfiguration;
+        private ICharacterConfiguration playerConfiguration;
         private ShootingComponent shootingomponent;
 
         private void Awake()
@@ -22,7 +22,7 @@ namespace Battles.Entities.Player
         }
 
         [Inject, UsedImplicitly]
-        private void Construct(SignalBus signalBus, IPlayerConfiguration playerConfiguration)
+        private void Construct(SignalBus signalBus, ICharacterConfiguration playerConfiguration)
         {
             this.signalBus = signalBus;
             this.playerConfiguration = playerConfiguration;
@@ -35,7 +35,8 @@ namespace Battles.Entities.Player
         private void AddShootingComponent()
         {
             var shootingParameters = new ShootingParameters(playerConfiguration.ProjectileVelocity,
-                playerConfiguration.MaxShootingFrequency, projectileSpawnPosition, ProjectileDirection.Up);
+                playerConfiguration.MaxShootingFrequency, projectileSpawnPosition, ProjectileDirection.Up,
+                playerConfiguration.ProjectileLifetime);
             shootingomponent = new ShootingComponent(shootingParameters, signalBus);
         }
 

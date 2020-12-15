@@ -1,10 +1,6 @@
 ﻿namespace Battles.Entities.Player
 {
-    public interface IPlayerConfiguration
+    public interface IPlayerConfiguration : ICharacterConfiguration
     {
-        float MoveSpeed { get; }
-        float ProjectileVelocity { get; }
-
-        float MaxShootingFrequency { get; }
     }
 }
