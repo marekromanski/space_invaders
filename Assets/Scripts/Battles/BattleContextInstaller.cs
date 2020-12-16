@@ -19,6 +19,7 @@ namespace Battles
             Container.DeclareSignal<PlayerMovedSignal>();
             Container.DeclareSignal<ShotAttemptSignal>();
             Container.DeclareSignal<SpawnProjectileSignal>();
+            Container.DeclareSignal<EnemyDestroyedSignal>();
 
             Container.BindInterfacesAndSelfTo<EditorControls>().AsSingle();
             Container.BindInterfacesAndSelfTo<ProjectileManager>().AsSingle();

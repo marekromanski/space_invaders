@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using Battles.Entities.Projectiles;
+using Battles.Mechanics;
 using Battles.Mechanics.Shooting;
-using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -11,6 +11,8 @@ namespace Battles.Entities.Enemies
 {
     public class EnemyEntity : MonoBehaviour
     {
+        private const string ProjectileTag = "Projectile";
+
         [SerializeField]
         private Transform projectileSpawnPosition;
 
@@ -19,7 +21,9 @@ namespace Battles.Entities.Enemies
         private ShootingComponent shootingomponent;
 
         private EnemyType type;
-        
+
+        private CollisionDetectionComponent collisionDetectionComponent;
+
         private void Awake()
         {
             Assert.IsNotNull(projectileSpawnPosition);
@@ -56,6 +60,19 @@ namespace Battles.Entities.Enemies
                 yield return new WaitForSeconds(1.3f);
                 shootingomponent.AttemptShot();
             }
+        }
+
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.CompareTag(ProjectileTag))
+            {
+                signalBus.Fire(new EnemyDestroyedSignal(type, this));
+            }
+        }
+
+        private void OnDestroy()
+        {
+            StopAllCoroutines();
         }
     }
 }
