@@ -9,8 +9,8 @@ namespace Battles.Entities.Projectiles
     public class ProjectileManager : IDisposable, ITickable
     {
         private readonly SignalBus signalBus;
-        private readonly IProjectileFactory projectileFactory;
-        private readonly IInstantiator instantiator;
+        private readonly IProjectileSpawner projectileSpawner;
+
 
         private readonly Dictionary<ProjectileDirection, Quaternion> directionToRotationMapping =
             new Dictionary<ProjectileDirection, Quaternion>
@@ -20,14 +20,13 @@ namespace Battles.Entities.Projectiles
             };
 
         private readonly List<ProjectileMb> activeProjectiles = new List<ProjectileMb>();
-        private readonly Stack<ProjectileMb> projectilePool = new Stack<ProjectileMb>();
+
 
         [UsedImplicitly]
-        public ProjectileManager(SignalBus signalBus, IProjectileFactory projectileFactory, IInstantiator instantiator)
+        public ProjectileManager(SignalBus signalBus, IProjectileSpawner projectileSpawner)
         {
             this.signalBus = signalBus;
-            this.projectileFactory = projectileFactory;
-            this.instantiator = instantiator;
+            this.projectileSpawner = projectileSpawner;
 
             signalBus.Subscribe<SpawnProjectileSignal>(OnSpawnProjectileSignal);
         }
@@ -35,23 +34,10 @@ namespace Battles.Entities.Projectiles
         private void OnSpawnProjectileSignal(SpawnProjectileSignal signal)
         {
             var rotation = directionToRotationMapping[signal.direction];
-            var projectile = InstantiateProjectile(signal.position, rotation);
+            var projectile = projectileSpawner.Spawn(signal.position, rotation);
             projectile.SetCharacteristics(signal.velocity, signal.direction, signal.lifeTime);
 
             activeProjectiles.Add(projectile);
-        }
-
-        private ProjectileMb InstantiateProjectile(Vector3 position, Quaternion rotation)
-        {
-            if (projectilePool.Count > 0)
-            {
-                var projectile = projectilePool.Pop();
-                projectile.transform.SetPositionAndRotation(position, rotation);
-                projectile.OnSpawned();
-                return projectile;
-            }
-
-            return projectileFactory.InstantiateProjectile(instantiator, position, rotation);
         }
 
         public void Dispose()
@@ -73,8 +59,7 @@ namespace Battles.Entities.Projectiles
                 if (projectile.TimeElapsed())
                 {
                     activeProjectiles.RemoveAt(i);
-                    projectile.OnDespawned();
-                    projectilePool.Push(projectile);
+                    signalBus.Fire(new ProjectileDestroyedSignal(projectile));
                 }
             }
         }
