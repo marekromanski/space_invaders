@@ -250,7 +250,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpawnPosition: {fileID: 1764774994}
-  enemySpawnPosition: {fileID: 0}
 --- !u!1 &265239121
 GameObject:
   m_ObjectHideFlags: 0
@@ -762,7 +761,7 @@ MonoBehaviour:
   enemiesConfiguration: {fileID: 11400000, guid: 3ad1e02437ca2c945b28ff4442bc87f1,
     type: 2}
   battleConfig: {fileID: 11400000, guid: c70c8a49938f06646b8d18cda9cd60bf, type: 2}
-  battleFieldDescriptor: {fileID: 0}
+  battleFieldDescriptor: {fileID: 655839116}
 --- !u!1 &655839114
 GameObject:
   m_ObjectHideFlags: 0

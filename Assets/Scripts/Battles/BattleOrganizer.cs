@@ -12,26 +12,28 @@ namespace Battles
         [SerializeField]
         private Transform playerSpawnPosition;
 
-        [SerializeField]
-        private Transform enemySpawnPosition;
-
         private IEntitiesFactory factory;
         private DiContainer diContainer;
 
-        private readonly Dictionary<EnemyType, IEnemySpawner> enemySpawners = new Dictionary<EnemyType, IEnemySpawner>(3);
-         
+        private readonly Dictionary<EnemyType, IEnemySpawner> enemySpawners =
+            new Dictionary<EnemyType, IEnemySpawner>(3);
+
         private SignalBus signalBus;
         private IBattleConfig battleConfig;
+        private IBattleFieldDescriptor battleFieldDescriptor;
 
         [Inject, UsedImplicitly]
-        private void Construct(IBattleFieldDescriptor battleFieldDescriptor, IBattleConfig battleConfig, SignalBus signalBus, IEntitiesFactory factory, DiContainer diContainer,
-            IMothershipSpawner mothershipSpawner, IEliteEnemySpawner eliteEnemySpawner, IRegularEnemySpawner regularEnemySpawner)
+        private void Construct(IBattleFieldDescriptor battleFieldDescriptor, IBattleConfig battleConfig,
+            SignalBus signalBus, IEntitiesFactory factory, DiContainer diContainer,
+            IMothershipSpawner mothershipSpawner, IEliteEnemySpawner eliteEnemySpawner,
+            IRegularEnemySpawner regularEnemySpawner)
         {
             this.battleConfig = battleConfig;
             this.signalBus = signalBus;
             this.factory = factory;
             this.diContainer = diContainer;
-            
+            this.battleFieldDescriptor = battleFieldDescriptor;
+
             enemySpawners.Add(EnemyType.MotherShip, mothershipSpawner);
             enemySpawners.Add(EnemyType.Elite, eliteEnemySpawner);
             enemySpawners.Add(EnemyType.Regular, regularEnemySpawner);
@@ -45,45 +47,41 @@ namespace Battles
 
         private void SpawnWave()
         {
-            SpawnMotherships();
-            SpawnElites();
-            SpawnRegulars();
+            int totalEnemiesRows = battleConfig.GetAmountOfRegularRows() + 2;
+            float rowHeight = (battleFieldDescriptor.TopSpawnBorder - battleFieldDescriptor.BotSpawnBorder) / totalEnemiesRows;
 
-        }
+            float mothershipRowPositionY = CalculateRowPositionY(0, rowHeight);
+            float elitesRowPositionY = CalculateRowPositionY(1, rowHeight);
 
-        private void SpawnMotherships()
-        {
-            for (int i = 0; i < battleConfig.GetAmountOf(EnemyType.MotherShip); ++i)
+            SpawnRowOfEnemies(mothershipRowPositionY, EnemyType.MotherShip);
+            SpawnRowOfEnemies(elitesRowPositionY, EnemyType.Elite);
+            for (int i = 2; i < totalEnemiesRows; ++i)
             {
-                var position = GetSpawnPosition(EnemyType.MotherShip);
-                SpawnEnemy(EnemyType.MotherShip, position);
+                float regularRowPositionY = CalculateRowPositionY(i, rowHeight);
+                SpawnRowOfEnemies(regularRowPositionY, EnemyType.Regular);
             }
         }
 
-        private void SpawnElites()
+        private float CalculateRowPositionY(int index, float rowHeight)
         {
-            for (int i = 0; i < battleConfig.GetAmountOf(EnemyType.Elite); ++i)
+            return battleFieldDescriptor.TopSpawnBorder - index * rowHeight;
+        }
+
+        private void SpawnRowOfEnemies(float rowPositionY, EnemyType enemyType)
+        {
+            var entitiesInRow = battleConfig.GetAmountOf(enemyType);
+            float columnWidth = (battleFieldDescriptor.RightBorder - battleFieldDescriptor.LeftBorder) / entitiesInRow;
+
+            for (int i = 0; i < entitiesInRow; ++i)
             {
-                var position = GetSpawnPosition(EnemyType.Elite);
-                SpawnEnemy(EnemyType.Elite, position);
+                var x = CalculateColumnPositionX(i, columnWidth);
+                SpawnEnemy(enemyType, new Vector3(x, rowPositionY, 0f));
             }
         }
 
-        private void SpawnRegulars()
+        private float CalculateColumnPositionX(int index, float columnWidth)
         {
-            for(int row = 0; row < battleConfig.GetAmountOfRegularRows(); ++row)
-            {
-                for (int i = 0; i < battleConfig.GetAmountOf(EnemyType.Regular); ++i)
-                {
-                    var position = GetSpawnPosition(EnemyType.Regular);
-                    SpawnEnemy(EnemyType.Regular, position);
-                }
-            }
-        }
-
-        private Vector3 GetSpawnPosition(EnemyType enemyType)
-        {
-            return enemySpawnPosition.position;
+            return battleFieldDescriptor.RightBorder - index * columnWidth;
         }
 
         private void SpawnEnemy(EnemyType enemyType, Vector3 position)
