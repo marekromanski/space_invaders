@@ -1,4 +1,5 @@
 ﻿using Battles.Mechanics.LimitedLifetime;
+using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;
 
@@ -10,6 +11,13 @@ namespace Battles.Entities.Projectiles
         private ProjectileDirection direction;
 
         private LifetimeComponent lifetimeComponent;
+        private SignalBus signalBus;
+
+        [Inject, UsedImplicitly]
+        private void Construct(SignalBus signalBus)
+        {
+            this.signalBus = signalBus;
+        }
 
         public void SetCharacteristics(float velocity, ProjectileDirection direction, float lifeTime)
         {
@@ -41,7 +49,12 @@ namespace Battles.Entities.Projectiles
 
         public bool TimeElapsed()
         {
-            return lifetimeComponent.TimeElapsed();
+            return lifetimeComponent?.TimeElapsed() ?? false;
+        }
+        
+        private void OnCollisionEnter()
+        {
+            signalBus.Fire(new ProjectileDestroyedSignal(this));
         }
     }
 }

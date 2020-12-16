@@ -29,6 +29,12 @@ namespace Battles.Entities.Projectiles
             this.projectileSpawner = projectileSpawner;
 
             signalBus.Subscribe<SpawnProjectileSignal>(OnSpawnProjectileSignal);
+            signalBus.Subscribe<ProjectileDestroyedSignal>(OnProjectileDestroyedSignal);
+        }
+
+        private void OnProjectileDestroyedSignal(ProjectileDestroyedSignal signal)
+        {
+            activeProjectiles.Remove(signal.projectile);
         }
 
         private void OnSpawnProjectileSignal(SpawnProjectileSignal signal)
@@ -38,11 +44,6 @@ namespace Battles.Entities.Projectiles
             projectile.SetCharacteristics(signal.velocity, signal.direction, signal.lifeTime);
 
             activeProjectiles.Add(projectile);
-        }
-
-        public void Dispose()
-        {
-            signalBus.Unsubscribe<SpawnProjectileSignal>(OnSpawnProjectileSignal);
         }
 
         public void Tick()
@@ -58,7 +59,6 @@ namespace Battles.Entities.Projectiles
                 var projectile = activeProjectiles[i];
                 if (projectile.TimeElapsed())
                 {
-                    activeProjectiles.RemoveAt(i);
                     signalBus.Fire(new ProjectileDestroyedSignal(projectile));
                 }
             }
@@ -70,6 +70,11 @@ namespace Battles.Entities.Projectiles
             {
                 projectile.Move();
             }
+        }
+
+        public void Dispose()
+        {
+            signalBus.Unsubscribe<SpawnProjectileSignal>(OnSpawnProjectileSignal);
         }
     }
 }

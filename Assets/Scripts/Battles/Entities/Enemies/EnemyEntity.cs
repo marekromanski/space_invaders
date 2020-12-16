@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using Battles.Entities.Projectiles;
-using Battles.Mechanics;
+﻿using Battles.Entities.Projectiles;
 using Battles.Mechanics.Shooting;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -22,7 +20,7 @@ namespace Battles.Entities.Enemies
 
         private EnemyType type;
 
-        private CollisionDetectionComponent collisionDetectionComponent;
+        public Vector3 ProjectileSpawnPosition => projectileSpawnPosition.position; 
 
         private void Awake()
         {
@@ -49,22 +47,16 @@ namespace Battles.Entities.Enemies
         {
             type = enemyType;
             AddShootingComponent();
-
-            StartCoroutine(ShootingCoroutine());
         }
 
-        private IEnumerator ShootingCoroutine()
+        public void AttemptShot()
         {
-            while (true)
-            {
-                yield return new WaitForSeconds(1.3f);
-                shootingomponent.AttemptShot();
-            }
+            shootingomponent.AttemptShot();
         }
 
         private void OnCollisionEnter(Collision other)
         {
-            if (other.gameObject.CompareTag(ProjectileTag))
+            if (other.gameObject.CompareTag(Tags.PROJECTILE))
             {
                 signalBus.Fire(new EnemyDestroyedSignal(type, this));
             }
