@@ -24,7 +24,7 @@ namespace Battles
         private IBattleConfig battleConfig;
 
         [Inject, UsedImplicitly]
-        private void Construct(IBattleConfig battleConfig, SignalBus signalBus, IEntitiesFactory factory, DiContainer diContainer,
+        private void Construct(IBattleFieldDescriptor battleFieldDescriptor, IBattleConfig battleConfig, SignalBus signalBus, IEntitiesFactory factory, DiContainer diContainer,
             IMothershipSpawner mothershipSpawner, IEliteEnemySpawner eliteEnemySpawner, IRegularEnemySpawner regularEnemySpawner)
         {
             this.battleConfig = battleConfig;

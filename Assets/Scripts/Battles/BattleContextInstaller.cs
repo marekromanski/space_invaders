@@ -17,11 +17,16 @@ namespace Battles
         [SerializeField]
         private BattleConfig battleConfig;
 
+        [SerializeField]
+        private BattleFieldDescriptor battleFieldDescriptor;
+
         public override void InstallBindings()
         {
             DeclareSignals();
 
             Container.BindInterfacesAndSelfTo<EditorControls>().AsSingle();
+
+            Container.Bind<IBattleFieldDescriptor>().FromInstance(battleFieldDescriptor).AsSingle();
 
             BindSpawners();
 
