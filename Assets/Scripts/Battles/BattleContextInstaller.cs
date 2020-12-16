@@ -14,7 +14,24 @@ namespace Battles
         [SerializeField]
         private EnemiesConfiguration enemiesConfiguration;
 
+        [SerializeField]
+        private BattleConfig battleConfig;
+
         public override void InstallBindings()
+        {
+            DeclareSignals();
+
+            Container.BindInterfacesAndSelfTo<EditorControls>().AsSingle();
+
+            BindSpawners();
+
+            Container.BindInterfacesAndSelfTo<EnemiesManager>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<ProjectileManager>().AsSingle().NonLazy();
+
+            BindConfigurations();
+        }
+
+        private void DeclareSignals()
         {
             Container.DeclareSignal<PlayerMovedSignal>();
             Container.DeclareSignal<ShotAttemptSignal>();
@@ -22,18 +39,21 @@ namespace Battles
             Container.DeclareSignal<ProjectileDestroyedSignal>();
             Container.DeclareSignal<EnemySpawnedSignal>();
             Container.DeclareSignal<EnemyDestroyedSignal>();
+        }
 
-            Container.BindInterfacesAndSelfTo<EditorControls>().AsSingle();
+        private void BindSpawners()
+        {
+            Container.BindInterfacesAndSelfTo<ProjectileSpawner>().AsSingle();
             Container.BindInterfacesAndSelfTo<MotherShipSpawner>().AsSingle();
             Container.BindInterfacesAndSelfTo<EliteEnemySpawner>().AsSingle();
             Container.BindInterfacesAndSelfTo<RegularEnemySpawner>().AsSingle();
-            Container.BindInterfacesAndSelfTo<EnemiesManager>().AsSingle().NonLazy();
+        }
 
-            Container.BindInterfacesAndSelfTo<ProjectileSpawner>().AsSingle();
-            Container.BindInterfacesAndSelfTo<ProjectileManager>().AsSingle().NonLazy();
-
+        private void BindConfigurations()
+        {
             Container.Bind<IPlayerConfiguration>().FromInstance(playerConfiguration).AsSingle();
             Container.Bind<IEnemiesConfiguration>().FromInstance(enemiesConfiguration).AsSingle();
+            Container.Bind<IBattleConfig>().FromInstance(battleConfig).AsSingle();
         }
     }
 }

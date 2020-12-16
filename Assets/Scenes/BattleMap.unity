@@ -698,6 +698,7 @@ MonoBehaviour:
     type: 2}
   enemiesConfiguration: {fileID: 11400000, guid: 3ad1e02437ca2c945b28ff4442bc87f1,
     type: 2}
+  battleConfig: {fileID: 11400000, guid: c70c8a49938f06646b8d18cda9cd60bf, type: 2}
 --- !u!1 &774362827
 GameObject:
   m_ObjectHideFlags: 0
