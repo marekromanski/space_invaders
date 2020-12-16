@@ -16,12 +16,22 @@ namespace Battles
 
         private IEntitiesFactory factory;
         private DiContainer diContainer;
+        private IMothershipSpawner mothershipSpawner;
+        private IEliteEnemySpawner eliteEnemySpawner;
+        private IRegularEnemySpawner regularEnemySpawner;
+        private SignalBus signalBus;
 
         [Inject, UsedImplicitly]
-        private void Construct(IEntitiesFactory factory, DiContainer diContainer)
-        { 
+        private void Construct(SignalBus signalBus, IEntitiesFactory factory, DiContainer diContainer,
+            IMothershipSpawner mothershipSpawner, IEliteEnemySpawner eliteEnemySpawner, IRegularEnemySpawner regularEnemySpawner)
+        {
+            this.signalBus = signalBus;
             this.factory = factory;
             this.diContainer = diContainer;
+
+            this.mothershipSpawner = mothershipSpawner;
+            this.eliteEnemySpawner = eliteEnemySpawner;
+            this.regularEnemySpawner = regularEnemySpawner;
         }
 
         private void Start()
@@ -32,8 +42,8 @@ namespace Battles
 
         private void SpawnEnemies()
         {
-            var enemy = factory.InstantiateEnemy(EnemyType.MotherShip, diContainer, enemySpawnPosition.position, Quaternion.identity);
-            enemy.Init(EnemyType.MotherShip);
+            var enemy = mothershipSpawner.Spawn(enemySpawnPosition.position, Quaternion.identity);
+            signalBus.Fire(new EnemySpawnedSignal(EnemyType.MotherShip, enemy));
         }
 
         private void SpawnPlayer()

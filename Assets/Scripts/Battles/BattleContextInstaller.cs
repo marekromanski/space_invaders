@@ -24,7 +24,11 @@ namespace Battles
             Container.DeclareSignal<EnemyDestroyedSignal>();
 
             Container.BindInterfacesAndSelfTo<EditorControls>().AsSingle();
+            Container.BindInterfacesAndSelfTo<MotherShipSpawner>().AsSingle();
+            Container.BindInterfacesAndSelfTo<EliteEnemySpawner>().AsSingle();
+            Container.BindInterfacesAndSelfTo<RegularEnemySpawner>().AsSingle();
             Container.BindInterfacesAndSelfTo<EnemiesManager>().AsSingle().NonLazy();
+
             Container.BindInterfacesAndSelfTo<ProjectileSpawner>().AsSingle();
             Container.BindInterfacesAndSelfTo<ProjectileManager>().AsSingle().NonLazy();
 

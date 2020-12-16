@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6162839420629564933}
-  - component: {fileID: 3790682904417153483}
+  - component: {fileID: 5246412843867562290}
   - component: {fileID: 8441434521032414669}
   - component: {fileID: 8515455343367229635}
   m_Layer: 0
@@ -35,7 +35,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3790682904417153483
+--- !u!114 &5246412843867562290
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,7 +44,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6162839420629564932}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a099fa21745e4b9b9a5f4e24c35d1b14, type: 3}
+  m_Script: {fileID: 11500000, guid: 19bd92fe3bfa42de982d2ae49f67dcb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpawnPosition: {fileID: 5664270249328767936}

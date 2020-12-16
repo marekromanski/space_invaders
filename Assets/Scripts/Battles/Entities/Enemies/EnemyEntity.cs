@@ -9,7 +9,7 @@ using Zenject;
 
 namespace Battles.Entities.Enemies
 {
-    public class EnemyEntity : MonoBehaviour
+    public class EnemyEntity : MonoBehaviour, IPoolable
     {
         private const string ProjectileTag = "Projectile";
 
@@ -73,6 +73,16 @@ namespace Battles.Entities.Enemies
         private void OnDestroy()
         {
             StopAllCoroutines();
+        }
+
+        public void OnDespawned()
+        {
+            gameObject.SetActive(false);
+        }
+
+        public void OnSpawned()
+        {
+            gameObject.SetActive(true);
         }
     }
 }
