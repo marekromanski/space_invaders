@@ -40,6 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3378147314555627419}
   - component: {fileID: 1795103551128630432}
+  - component: {fileID: 3321004544913013139}
   m_Layer: 0
   m_Name: MotherShip
   m_TagString: Untagged
@@ -76,6 +77,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpawnPosition: {fileID: 2603190083674879494}
+--- !u!65 &3321004544913013139
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3378147314555627420}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.0682638, y: 0.9301784, z: 1.8654034}
+  m_Center: {x: 0.003491044, y: -0.06283891, z: -0.07978067}
 --- !u!1001 &3378147315230572080
 PrefabInstance:
   m_ObjectHideFlags: 0
