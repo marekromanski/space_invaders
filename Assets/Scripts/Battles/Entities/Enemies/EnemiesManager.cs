@@ -9,11 +9,11 @@ namespace Battles.Entities.Enemies
     public class EnemiesManager : IDisposable, ITickable
     {
         private readonly SignalBus signalBus;
+        private readonly IEnemiesConfiguration enemiesConfiguration;
 
-        private RaycastHit[] reycastHits;
+        private readonly RaycastHit[] reycastHits = new RaycastHit[10];
+
         private float lastShotTakenTime;
-        private float minShootingInterval = 0.5f;
-
 
         private readonly Dictionary<EnemyType, List<EnemyEntity>> activeEnemies =
             new Dictionary<EnemyType, List<EnemyEntity>>
@@ -25,14 +25,14 @@ namespace Battles.Entities.Enemies
 
 
         [UsedImplicitly]
-        public EnemiesManager(SignalBus signalBus)
+        public EnemiesManager(SignalBus signalBus, IEnemiesConfiguration enemiesConfiguration)
         {
             this.signalBus = signalBus;
+            this.enemiesConfiguration = enemiesConfiguration;
 
             signalBus.Subscribe<EnemySpawnedSignal>(OnEnemySpawned);
             signalBus.Subscribe<EnemyDestroyedSignal>(OnEnemyDestroyed);
 
-            reycastHits = new RaycastHit[10];
             lastShotTakenTime = Time.time;
         }
 
@@ -48,7 +48,7 @@ namespace Battles.Entities.Enemies
 
         public void Tick()
         {
-            if (lastShotTakenTime + minShootingInterval > Time.time)
+            if (lastShotTakenTime + enemiesConfiguration.IntervalBetweenShotAttempts > Time.time)
             {
                 return;
             }
@@ -80,9 +80,8 @@ namespace Battles.Entities.Enemies
 
         private bool HasValidTarget(EnemyEntity enemy)
         {
-            var aimDelta = 0.3f;
-            var aimLeft = new Vector3(enemy.ProjectileSpawnPosition.x - aimDelta, enemy.ProjectileSpawnPosition.y, enemy.ProjectileSpawnPosition.z);
-            var aimRight = new Vector3(enemy.ProjectileSpawnPosition.x + aimDelta, enemy.ProjectileSpawnPosition.y, enemy.ProjectileSpawnPosition.z);
+            var aimLeft = new Vector3(enemy.ProjectileSpawnPosition.x - enemiesConfiguration.AimingDelta, enemy.ProjectileSpawnPosition.y, enemy.ProjectileSpawnPosition.z);
+            var aimRight = new Vector3(enemy.ProjectileSpawnPosition.x + enemiesConfiguration.AimingDelta, enemy.ProjectileSpawnPosition.y, enemy.ProjectileSpawnPosition.z);
             var aimLeftResult = Aim(aimLeft);
             var aimRightResult = Aim(aimRight);
 

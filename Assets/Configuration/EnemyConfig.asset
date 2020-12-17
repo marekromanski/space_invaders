@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b48655b3cf4bcb99b737a25e39cff1, type: 3}
   m_Name: EnemyConfig
   m_EditorClassIdentifier: 
+  aimingDelta: 0.3
+  intervalBetweenShotAttempts: 0.5
   enemies:
   - type: 0
     configuration:

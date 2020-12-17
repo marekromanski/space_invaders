@@ -8,14 +8,23 @@ namespace Battles.Entities.Enemies
     public class EnemiesConfiguration : ScriptableObject, IEnemiesConfiguration
     {
         [SerializeField]
+        private float aimingDelta;
+
+        [SerializeField]
+        private float intervalBetweenShotAttempts;
+
+        [SerializeField]
         private EnemyConfigurationEntry[] enemies;
-        
+
         [Serializable]
         private class EnemyConfigurationEntry
         {
             public EnemyType type;
             public EnemyConfiguration configuration;
         }
+
+        public float AimingDelta => aimingDelta;
+        public float IntervalBetweenShotAttempts => intervalBetweenShotAttempts;
 
         public ICharacterConfiguration GetEnemyConfiguration(EnemyType type)
         {
