@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using JetBrains.Annotations;
@@ -23,6 +22,7 @@ namespace Battles.Entities.Enemies
         private EnemyEntity rightmostEntity;
 
         private const float WaitTime = 0.5f;
+        private const float PositionDelta = 0.1f;
 
         public EnemiesRow(EnemyType enemyType, List<EnemyEntity> entities)
         {
@@ -36,7 +36,6 @@ namespace Battles.Entities.Enemies
         private void Construct(IBattleFieldDescriptor battleFieldDescriptor)
         {
             this.battleFieldDescriptor = battleFieldDescriptor;
-            Debug.Log("Construt called");
 
             StartMoving().Forget();
         }
@@ -73,7 +72,7 @@ namespace Battles.Entities.Enemies
         private async UniTask TakeAStepLeft()
         {
             var positionAfterFullStep = leftmostEntity.transform.position.x - stepSize;
-            var finalStepSize = positionAfterFullStep > battleFieldDescriptor.LeftBorder
+            var finalStepSize = positionAfterFullStep >= battleFieldDescriptor.LeftBorder
                 ? stepSize
                 : Mathf.Abs(positionAfterFullStep - battleFieldDescriptor.LeftBorder);
 
@@ -85,14 +84,14 @@ namespace Battles.Entities.Enemies
         private async UniTask TakeAStepRight()
         {
             var positionAfterFullStep = rightmostEntity.transform.position.x + stepSize;
-            var finalStepSize = positionAfterFullStep < battleFieldDescriptor.RightBorder
+            var finalStepSize = positionAfterFullStep <= battleFieldDescriptor.RightBorder
                 ? stepSize
                 : Mathf.Abs(positionAfterFullStep - battleFieldDescriptor.RightBorder);
 
             await TakeAStep(finalStepSize);
         }
 
-        private async Task TakeAStep(float finalStepSize)
+        private async UniTask TakeAStep(float finalStepSize)
         {
             Sequence sequence = DOTween.Sequence();
             foreach (var enemy in enemies)
@@ -112,14 +111,18 @@ namespace Battles.Entities.Enemies
                 return false;
             }
 
-            return leftmostEntity.transform.position.x > battleFieldDescriptor.LeftBorder;
+            return leftmostEntity.transform.position.x - battleFieldDescriptor.LeftBorder > PositionDelta;
         }
 
         private bool CanMoveRight()
         {
-            return rightmostEntity.transform.position.x < battleFieldDescriptor.RightBorder;
-        }
+            if (enemies.Count == 0)
+            {
+                return false;
+            }
 
+            return rightmostEntity.transform.position.x - battleFieldDescriptor.RightBorder < PositionDelta;
+        }
 
         private async UniTask HoldPosition()
         {
