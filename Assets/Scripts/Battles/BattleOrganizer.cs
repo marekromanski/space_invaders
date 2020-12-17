@@ -70,7 +70,7 @@ namespace Battles
         private void SpawnRowOfEnemies(float rowPositionY, EnemyType enemyType)
         {
             var entitiesInRow = battleConfig.GetAmountOf(enemyType);
-            float columnWidth = (battleFieldDescriptor.RightBorder - battleFieldDescriptor.LeftBorder) / entitiesInRow;
+            float columnWidth = (battleFieldDescriptor.RightBorder - battleFieldDescriptor.LeftBorder) / (entitiesInRow + 1);
 
             for (int i = 0; i < entitiesInRow; ++i)
             {
@@ -81,7 +81,7 @@ namespace Battles
 
         private float CalculateColumnPositionX(int index, float columnWidth)
         {
-            return battleFieldDescriptor.RightBorder - index * columnWidth;
+            return battleFieldDescriptor.LeftBorder + (index + 1) * columnWidth;
         }
 
         private void SpawnEnemy(EnemyType enemyType, Vector3 position)
