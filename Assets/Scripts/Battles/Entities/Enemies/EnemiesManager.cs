@@ -15,7 +15,7 @@ namespace Battles.Entities.Enemies
 
         private float lastShotTakenTime;
 
-        private readonly Dictionary<EnemyType, List<EnemyEntity>> activeEnemies =
+        private readonly Dictionary<EnemyType, List<EnemyEntity>> activeEnemiesByType =
             new Dictionary<EnemyType, List<EnemyEntity>>
             {
                 {EnemyType.MotherShip, new List<EnemyEntity>()},
@@ -23,12 +23,15 @@ namespace Battles.Entities.Enemies
                 {EnemyType.Regular, new List<EnemyEntity>()},
             };
 
+        private readonly Dictionary<int, EnemiesRow> enemiesByRows = new Dictionary<int, EnemiesRow>();
+        private readonly DiContainer diContainer;
 
         [UsedImplicitly]
-        public EnemiesManager(SignalBus signalBus, IEnemiesConfiguration enemiesConfiguration)
+        public EnemiesManager(SignalBus signalBus, IEnemiesConfiguration enemiesConfiguration, DiContainer diContainer)
         {
             this.signalBus = signalBus;
             this.enemiesConfiguration = enemiesConfiguration;
+            this.diContainer = diContainer;
 
             signalBus.Subscribe<EnemySpawnedSignal>(OnEnemySpawned);
             signalBus.Subscribe<EnemyDestroyedSignal>(OnEnemyDestroyed);
@@ -38,21 +41,37 @@ namespace Battles.Entities.Enemies
 
         private void OnEnemySpawned(EnemySpawnedSignal signal)
         {
-            activeEnemies[signal.type].Add(signal.entity);
+            activeEnemiesByType[signal.type].Add(signal.entity);
+            if (enemiesByRows.ContainsKey(signal.entity.RowNumber))
+            {
+                enemiesByRows[signal.entity.RowNumber].Add(signal.entity);
+            }
+            else
+            {
+                var enemiesRow = new EnemiesRow(signal.type, new List<EnemyEntity> {signal.entity});
+                diContainer.Inject(enemiesRow);
+                enemiesByRows.Add(signal.entity.RowNumber, enemiesRow);
+            }
         }
 
         private void OnEnemyDestroyed(EnemyDestroyedSignal signal)
         {
-            activeEnemies[signal.type].Remove(signal.entity);
+            activeEnemiesByType[signal.type].Remove(signal.entity);
+            enemiesByRows[signal.entity.RowNumber].Remove(signal.entity);
         }
 
         public void Tick()
+        {
+            AttemptShot();
+        }
+
+        private void AttemptShot()
         {
             if (lastShotTakenTime + enemiesConfiguration.IntervalBetweenShotAttempts > Time.time)
             {
                 return;
             }
-            
+
             var allEnemies = GetAllEnemiesAsList();
 
             foreach (var enemy in allEnemies)
@@ -70,7 +89,7 @@ namespace Battles.Entities.Enemies
         private List<EnemyEntity> GetAllEnemiesAsList()
         {
             var allEnemies = new List<EnemyEntity>();
-            foreach (var listOfEnmies in activeEnemies.Values)
+            foreach (var listOfEnmies in activeEnemiesByType.Values)
             {
                 allEnemies.AddRange(listOfEnmies);
             }
@@ -80,12 +99,15 @@ namespace Battles.Entities.Enemies
 
         private bool HasValidTarget(EnemyEntity enemy)
         {
-            var aimLeft = new Vector3(enemy.ProjectileSpawnPosition.x - enemiesConfiguration.AimingDelta, enemy.ProjectileSpawnPosition.y, enemy.ProjectileSpawnPosition.z);
-            var aimRight = new Vector3(enemy.ProjectileSpawnPosition.x + enemiesConfiguration.AimingDelta, enemy.ProjectileSpawnPosition.y, enemy.ProjectileSpawnPosition.z);
+            var aimLeft = new Vector3(enemy.ProjectileSpawnPosition.x - enemiesConfiguration.AimingDelta,
+                enemy.ProjectileSpawnPosition.y, enemy.ProjectileSpawnPosition.z);
+            var aimRight = new Vector3(enemy.ProjectileSpawnPosition.x + enemiesConfiguration.AimingDelta,
+                enemy.ProjectileSpawnPosition.y, enemy.ProjectileSpawnPosition.z);
             var aimLeftResult = Aim(aimLeft);
             var aimRightResult = Aim(aimRight);
 
-            return !(aimLeftResult.enemyInFront || aimRightResult.enemyInFront) && (aimLeftResult.playerInFront || aimRightResult.playerInFront);
+            return !(aimLeftResult.enemyInFront || aimRightResult.enemyInFront) &&
+                   (aimLeftResult.playerInFront || aimRightResult.playerInFront);
         }
 
         private AimingResult Aim(Vector3 raycastOrigin)

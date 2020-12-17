@@ -9,8 +9,6 @@ namespace Battles.Entities.Enemies
 {
     public class EnemyEntity : MonoBehaviour, IPoolable
     {
-        private const string ProjectileTag = "Projectile";
-
         [SerializeField]
         private Transform projectileSpawnPosition;
 
@@ -20,7 +18,8 @@ namespace Battles.Entities.Enemies
 
         private EnemyType type;
 
-        public Vector3 ProjectileSpawnPosition => projectileSpawnPosition.position; 
+        public Vector3 ProjectileSpawnPosition => projectileSpawnPosition.position;
+        public int RowNumber { get; private set; }
 
         private void Awake()
         {
@@ -43,9 +42,10 @@ namespace Battles.Entities.Enemies
             shootingomponent = new ShootingComponent(shootingParameters, signalBus);
         }
 
-        public void Init(EnemyType enemyType)
+        public void Init(EnemyType enemyType, int rowNumber)
         {
             type = enemyType;
+            RowNumber = rowNumber;
             AddShootingComponent();
         }
 

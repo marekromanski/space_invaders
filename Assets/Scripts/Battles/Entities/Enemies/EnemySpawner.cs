@@ -53,9 +53,7 @@ namespace Battles.Entities.Enemies
 
         protected override EnemyEntity SpawnNewInstance(Vector3 position, Quaternion rotation)
         {
-            var enemy = enemiesFactory.InstantiateEnemy(handledType, instantiator, position, rotation);
-            enemy.Init(handledType);
-            return enemy;
+            return enemiesFactory.InstantiateEnemy(handledType, instantiator, position, rotation);
         }
 
         protected override void SubscribeToDestroySignal()

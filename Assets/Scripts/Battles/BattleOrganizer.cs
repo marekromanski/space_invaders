@@ -53,12 +53,12 @@ namespace Battles
             float mothershipRowPositionY = CalculateRowPositionY(0, rowHeight);
             float elitesRowPositionY = CalculateRowPositionY(1, rowHeight);
 
-            SpawnRowOfEnemies(mothershipRowPositionY, EnemyType.MotherShip);
-            SpawnRowOfEnemies(elitesRowPositionY, EnemyType.Elite);
+            SpawnRowOfEnemies(mothershipRowPositionY, EnemyType.MotherShip, 0);
+            SpawnRowOfEnemies(elitesRowPositionY, EnemyType.Elite, 1);
             for (int i = 2; i < totalEnemiesRows; ++i)
             {
                 float regularRowPositionY = CalculateRowPositionY(i, rowHeight);
-                SpawnRowOfEnemies(regularRowPositionY, EnemyType.Regular);
+                SpawnRowOfEnemies(regularRowPositionY, EnemyType.Regular, i);
             }
         }
 
@@ -67,7 +67,7 @@ namespace Battles
             return battleFieldDescriptor.TopSpawnBorder - index * rowHeight;
         }
 
-        private void SpawnRowOfEnemies(float rowPositionY, EnemyType enemyType)
+        private void SpawnRowOfEnemies(float rowPositionY, EnemyType enemyType, int rowNumber)
         {
             var entitiesInRow = battleConfig.GetAmountOf(enemyType);
             float columnWidth = (battleFieldDescriptor.RightBorder - battleFieldDescriptor.LeftBorder) / (entitiesInRow + 1);
@@ -75,7 +75,7 @@ namespace Battles
             for (int i = 0; i < entitiesInRow; ++i)
             {
                 var x = CalculateColumnPositionX(i, columnWidth);
-                SpawnEnemy(enemyType, new Vector3(x, rowPositionY, 0f));
+                SpawnEnemy(enemyType, new Vector3(x, rowPositionY, 0f), rowNumber);
             }
         }
 
@@ -84,9 +84,10 @@ namespace Battles
             return battleFieldDescriptor.LeftBorder + (index + 1) * columnWidth;
         }
 
-        private void SpawnEnemy(EnemyType enemyType, Vector3 position)
+        private void SpawnEnemy(EnemyType enemyType, Vector3 position, int rowNumber)
         {
             var enemy = enemySpawners[enemyType].Spawn(position, Quaternion.identity);
+            enemy.Init(enemyType, rowNumber);
             signalBus.Fire(new EnemySpawnedSignal(enemyType, enemy));
         }
 
