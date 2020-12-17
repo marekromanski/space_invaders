@@ -37,6 +37,13 @@ namespace Battles
             enemySpawners.Add(EnemyType.MotherShip, mothershipSpawner);
             enemySpawners.Add(EnemyType.Elite, eliteEnemySpawner);
             enemySpawners.Add(EnemyType.Regular, regularEnemySpawner);
+
+            signalBus.Subscribe<WaveFinishedSignal>(OnWaveFinished);
+        }
+
+        private void OnWaveFinished()
+        {
+            SpawnWave();
         }
 
         private void Start()
@@ -94,6 +101,11 @@ namespace Battles
         private void SpawnPlayer()
         {
             factory.InstantiatePlayer(diContainer, playerSpawnPosition.position, Quaternion.identity);
+        }
+
+        private void OnDestroy()
+        {
+            signalBus.Unsubscribe<WaveFinishedSignal>(OnWaveFinished);
         }
     }
 }

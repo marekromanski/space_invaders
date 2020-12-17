@@ -42,7 +42,7 @@ namespace Battles.Entities.Enemies
 
         private async UniTask StartMoving()
         {
-            while (enemies.Count > 0)
+            while (true)
             {
                 await HoldPosition();
                 await MoveLeft();

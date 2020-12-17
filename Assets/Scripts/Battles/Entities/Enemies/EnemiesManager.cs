@@ -58,6 +58,23 @@ namespace Battles.Entities.Enemies
         {
             activeEnemiesByType[signal.type].Remove(signal.entity);
             enemiesByRows[signal.entity.RowNumber].Remove(signal.entity);
+
+            if (AllEnemiesDestroyed())
+            {
+                SendWaveFinishedSignal();
+            }
+        }
+
+        private void SendWaveFinishedSignal()
+        {
+            signalBus.Fire<WaveFinishedSignal>();
+        }
+
+        private bool AllEnemiesDestroyed()
+        {
+            var enemiesCOunt = activeEnemiesByType[EnemyType.MotherShip].Count + activeEnemiesByType[EnemyType.Elite].Count +
+                        activeEnemiesByType[EnemyType.Regular].Count;
+            return enemiesCOunt == 0;
         }
 
         public void Tick()

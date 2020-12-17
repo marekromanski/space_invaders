@@ -44,6 +44,7 @@ namespace Battles
             Container.DeclareSignal<ProjectileDestroyedSignal>();
             Container.DeclareSignal<EnemySpawnedSignal>();
             Container.DeclareSignal<EnemyDestroyedSignal>();
+            Container.DeclareSignal<WaveFinishedSignal>();
         }
 
         private void BindSpawners()
