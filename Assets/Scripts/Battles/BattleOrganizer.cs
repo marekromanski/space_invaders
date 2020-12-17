@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Battles.Entities;
 using Battles.Entities.Enemies;
+using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;
@@ -41,8 +43,9 @@ namespace Battles
             signalBus.Subscribe<WaveFinishedSignal>(OnWaveFinished);
         }
 
-        private void OnWaveFinished()
+        private async void OnWaveFinished()
         {
+            await UniTask.Delay(TimeSpan.FromSeconds(1f));
             SpawnWave();
         }
 

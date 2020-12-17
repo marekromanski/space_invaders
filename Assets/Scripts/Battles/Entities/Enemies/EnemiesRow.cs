@@ -15,13 +15,10 @@ namespace Battles.Entities.Enemies
         private readonly List<EnemyEntity> enemies;
         private IBattleFieldDescriptor battleFieldDescriptor;
 
-        private const float stepSize = 1f;
-        private const float stepTime = 0.5f;
-
         private EnemyEntity leftmostEntity;
         private EnemyEntity rightmostEntity;
+        private IEnemiesConfiguration enemiesConfiguration;
 
-        private const float WaitTime = 0.5f;
         private const float PositionDelta = 0.1f;
 
         public EnemiesRow(EnemyType enemyType, List<EnemyEntity> entities)
@@ -33,9 +30,10 @@ namespace Battles.Entities.Enemies
         }
 
         [Inject, UsedImplicitly]
-        private void Construct(IBattleFieldDescriptor battleFieldDescriptor)
+        private void Construct(IBattleFieldDescriptor battleFieldDescriptor, IEnemiesConfiguration enemiesConfiguration)
         {
             this.battleFieldDescriptor = battleFieldDescriptor;
+            this.enemiesConfiguration = enemiesConfiguration;
 
             StartMoving().Forget();
         }
@@ -71,9 +69,9 @@ namespace Battles.Entities.Enemies
 
         private async UniTask TakeAStepLeft()
         {
-            var positionAfterFullStep = leftmostEntity.transform.position.x - stepSize;
+            var positionAfterFullStep = leftmostEntity.transform.position.x - enemiesConfiguration.StepSize;
             var finalStepSize = positionAfterFullStep >= battleFieldDescriptor.LeftBorder
-                ? stepSize
+                ? enemiesConfiguration.StepSize
                 : Mathf.Abs(positionAfterFullStep - battleFieldDescriptor.LeftBorder);
 
             finalStepSize *= -1;
@@ -83,9 +81,9 @@ namespace Battles.Entities.Enemies
 
         private async UniTask TakeAStepRight()
         {
-            var positionAfterFullStep = rightmostEntity.transform.position.x + stepSize;
+            var positionAfterFullStep = rightmostEntity.transform.position.x + enemiesConfiguration.StepSize;
             var finalStepSize = positionAfterFullStep <= battleFieldDescriptor.RightBorder
-                ? stepSize
+                ? enemiesConfiguration.StepSize
                 : Mathf.Abs(positionAfterFullStep - battleFieldDescriptor.RightBorder);
 
             await TakeAStep(finalStepSize);
@@ -96,7 +94,7 @@ namespace Battles.Entities.Enemies
             Sequence sequence = DOTween.Sequence();
             foreach (var enemy in enemies)
             {
-                var tween = enemy.transform.DOMoveX(enemy.transform.position.x + finalStepSize, stepTime);
+                var tween = enemy.transform.DOMoveX(enemy.transform.position.x + finalStepSize, enemiesConfiguration.StepTime);
                 sequence.Join(tween);
             }
 
@@ -126,7 +124,7 @@ namespace Battles.Entities.Enemies
 
         private async UniTask HoldPosition()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(WaitTime));
+            await UniTask.Delay(TimeSpan.FromSeconds(enemiesConfiguration.WaitTime));
         }
 
         private EnemyEntity FindLeftmostEntity(List<EnemyEntity> enemyEntities)

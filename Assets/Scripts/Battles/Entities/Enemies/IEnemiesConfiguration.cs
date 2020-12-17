@@ -6,5 +6,8 @@
 
         float AimingDelta { get; }
         float IntervalBetweenShotAttempts { get; }
+        float StepSize { get; }
+        float StepTime { get; }
+        float WaitTime { get; }
     }
 }

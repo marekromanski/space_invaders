@@ -14,6 +14,15 @@ namespace Battles.Entities.Enemies
         private float intervalBetweenShotAttempts;
 
         [SerializeField]
+        private float stepSize = 1f;
+
+        [SerializeField]
+        private float stepTime = 0.5f;
+
+        [SerializeField]
+        private float waitTime = 0.5f;
+
+        [SerializeField]
         private EnemyConfigurationEntry[] enemies;
 
         [Serializable]
@@ -25,6 +34,9 @@ namespace Battles.Entities.Enemies
 
         public float AimingDelta => aimingDelta;
         public float IntervalBetweenShotAttempts => intervalBetweenShotAttempts;
+        public float StepSize => stepSize;
+        public float StepTime => stepTime;
+        public float WaitTime => waitTime;
 
         public ICharacterConfiguration GetEnemyConfiguration(EnemyType type)
         {
