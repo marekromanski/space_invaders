@@ -80,37 +80,37 @@ namespace Battles.Entities.Enemies
 
         private bool HasValidTarget(EnemyEntity enemy)
         {
-            var aimDelta = 0.5f;
+            var aimDelta = 0.3f;
             var aimLeft = new Vector3(enemy.ProjectileSpawnPosition.x - aimDelta, enemy.ProjectileSpawnPosition.y, enemy.ProjectileSpawnPosition.z);
             var aimRight = new Vector3(enemy.ProjectileSpawnPosition.x + aimDelta, enemy.ProjectileSpawnPosition.y, enemy.ProjectileSpawnPosition.z);
             var aimLeftResult = Aim(aimLeft);
             var aimRightResult = Aim(aimRight);
 
-            return !(aimLeftResult.enemyInFront || aimRightResult.enemyInFront ) && (aimLeftResult.playerInFront || aimLeftResult.playerInFront);
+            return !(aimLeftResult.enemyInFront || aimRightResult.enemyInFront) && (aimLeftResult.playerInFront || aimRightResult.playerInFront);
         }
 
         private AimingResult Aim(Vector3 raycastOrigin)
         {
             int hits = Physics.RaycastNonAlloc(raycastOrigin, Vector3.down, reycastHits, Mathf.Infinity);
 
-            var result = new AimingResult();
+            return new AimingResult
+            {
+                enemyInFront = IsEntityWithTagInFront(hits, Tags.ENEMY),
+                playerInFront = IsEntityWithTagInFront(hits, Tags.PLAYER)
+            };
+        }
+
+        private bool IsEntityWithTagInFront(int hits, string tag)
+        {
             for (int i = 0; i < hits; ++i)
             {
-                if (reycastHits[i].collider.CompareTag(Tags.ENEMY))
+                if (reycastHits[i].collider.CompareTag(tag))
                 {
-                    result.enemyInFront = true;
+                    return true;
                 }
             }
 
-            for (int i = 0; i < hits; ++i)
-            {
-                if (reycastHits[i].collider.CompareTag(Tags.PLAYER))
-                {
-                    result.playerInFront = true;
-                }
-            }
-
-            return result;
+            return false;
         }
 
         public void Dispose()

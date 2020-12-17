@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: BattleConfig
   m_EditorClassIdentifier: 
   amountOfMotherhips: 1
-  amountOfElites: 2
+  amountOfElites: 5
   amountOfRegulars: 8
   amountOfRegularRows: 4
