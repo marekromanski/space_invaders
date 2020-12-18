@@ -1,6 +1,4 @@
 ﻿using AssetManagement;
-using Battles;
-using Battles.UI;
 using Highscores;
 using Leaderboards;
 using UnityEngine;
@@ -18,6 +16,7 @@ namespace Core
             SignalBusInstaller.Install(Container);
 
             Container.DeclareSignal<StartGameSignal>();
+            Container.DeclareSignal<ShowLeaderboardsSignal>();
             Container.DeclareSignal<DependenciesLoadedSignal>();
             Container.DeclareSignal<LoadMainMenuSignal>();
             Container.DeclareSignal<NewHighScoreInsertedSignal>();

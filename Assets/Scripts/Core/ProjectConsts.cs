@@ -1,10 +1,7 @@
-﻿using System.IO;
-using UnityEngine;
-
-namespace Core
+﻿namespace Core
 {
     public static class ProjectConsts
     {
-        public static readonly string BundlePath = Path.Combine(Application.streamingAssetsPath);
+        public const int LeaderboarEntries = 10;
     }
 }

@@ -7,7 +7,7 @@ using Zenject;
 
 namespace MainMenu
 {
-    public class PlayButton : MonoBehaviour
+    public class LeaderboardsButton : MonoBehaviour
     {
         private SignalBus signalBus;
         private Button button;
@@ -17,22 +17,24 @@ namespace MainMenu
         {
             this.signalBus = signalBus;
         }
+
         private void Awake()
         {
             button = GetComponent<Button>();
             Assert.IsNotNull(button);
-            
-            button.onClick.AddListener(SendStartGameSignal);
+
+            button.onClick.AddListener(SendShowLeaderboardsSignal);
         }
 
-        private void SendStartGameSignal()
+        private void SendShowLeaderboardsSignal()
         {
-            signalBus.Fire<StartGameSignal>();
+            signalBus.Fire<ShowLeaderboardsSignal>();
+            Debug.Log("Sent show leaderboards");
         }
 
         private void OnDestroy()
         {
-            button.onClick.RemoveListener(SendStartGameSignal);
+            button.onClick.RemoveListener(SendShowLeaderboardsSignal);
         }
     }
 }

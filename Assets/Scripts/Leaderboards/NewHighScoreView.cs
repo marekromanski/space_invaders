@@ -11,10 +11,10 @@ namespace Leaderboards
         [SerializeField]
         private TMP_InputField nameInput;
 
-        private HighScoresKeeper highScoresKeeper;
+        private IHighScoresKeeper highScoresKeeper;
 
         [Inject, UsedImplicitly]
-        private void Construct(HighScoresKeeper highScoresKeeper)
+        private void Construct(IHighScoresKeeper highScoresKeeper)
         {
             this.highScoresKeeper = highScoresKeeper;
         }
@@ -22,6 +22,8 @@ namespace Leaderboards
         private void Start()
         {
             nameInput.onSubmit.AddListener(OnNameSubmited);
+
+            gameObject.SetActive(highScoresKeeper.HasPendingHighScore());
         }
 
         private void OnNameSubmited(string name)

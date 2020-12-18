@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Battles;
-using Battles.UI;
+using System.Linq;
+using Core;
 using JetBrains.Annotations;
 using Leaderboards;
 using UnityEngine;
@@ -13,7 +13,7 @@ namespace Highscores
     public class HighScoresKeeper : IHighScoresKeeper, IDisposable
     {
         private readonly SignalBus signalBus;
-        
+
         private readonly List<HighScoreEntry> entries;
         private const string HighScoresKey = "high_scores";
 
@@ -23,9 +23,9 @@ namespace Highscores
         public HighScoresKeeper(SignalBus signalBus)
         {
             this.signalBus = signalBus;
-            
+
             entries = LoadHighScores();
-            
+
             signalBus.Subscribe<NewHighScoreSignal>(OnNewHighScore);
         }
 
@@ -39,7 +39,8 @@ namespace Highscores
             if (PlayerPrefs.HasKey(HighScoresKey))
             {
                 var json = PlayerPrefs.GetString(HighScoresKey);
-                return JsonUtility.FromJson <List<HighScoreEntry>>(json);
+                var serializable = JsonUtility.FromJson<EntriesList>(json);
+                return serializable.entries;
             }
             else
             {
@@ -49,14 +50,16 @@ namespace Highscores
 
         private void SaveEntries(List<HighScoreEntry> entries)
         {
-            var json = JsonUtility.ToJson(entries);
+            var serializable = new EntriesList(entries);
+
+            var json = JsonUtility.ToJson(serializable);
             PlayerPrefs.SetString(HighScoresKey, json);
             PlayerPrefs.Save();
         }
 
         public bool IsHighScore(int score)
         {
-            if (entries.Count < 10)
+            if (entries.Count < ProjectConsts.LeaderboarEntries)
             {
                 return true;
             }
@@ -81,11 +84,23 @@ namespace Highscores
         {
             Assert.IsTrue(pendingHighScore.HasValue);
             var newEntry = new HighScoreEntry(name, pendingHighScore.Value);
+            pendingHighScore = null;
 
             var newEntryIndex = FindIndexOfNewEntry(newEntry.score);
             entries.Insert(newEntryIndex, newEntry);
             SaveEntries(entries);
+
             signalBus.Fire<NewHighScoreInsertedSignal>();
+        }
+
+        public bool HasPendingHighScore()
+        {
+            return pendingHighScore.HasValue;
+        }
+
+        public List<HighScoreEntry> GetHighScores()
+        {
+            return entries.ToList();
         }
 
         private int FindIndexOfNewEntry(int newEntryScore)
@@ -98,25 +113,25 @@ namespace Highscores
                 }
             }
 
-            if (entries.Count < 10)
+            if (entries.Count < ProjectConsts.LeaderboarEntries)
             {
                 return entries.Count;
             }
-            
+
             throw new Exception("We should not be here");
         }
     }
 
+    // This class is needed for serialization purposes
     [Serializable]
-    public class HighScoreEntry
+    public class EntriesList
     {
-        public readonly string name;
-        public readonly int score;
+        [SerializeField]
+        public List<HighScoreEntry> entries;
 
-        public HighScoreEntry(string name, int score)
+        public EntriesList(List<HighScoreEntry> entries)
         {
-            this.name = name;
-            this.score = score;
+            this.entries = entries;
         }
     }
 }
