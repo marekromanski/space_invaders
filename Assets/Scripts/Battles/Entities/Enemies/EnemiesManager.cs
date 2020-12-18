@@ -95,7 +95,6 @@ namespace Battles.Entities.Enemies
             {
                 if (HasValidTarget(enemy))
                 {
-                    Debug.Log("I am shooting", enemy.gameObject);
                     enemy.AttemptShot();
                     lastShotTakenTime = Time.time;
                     break;

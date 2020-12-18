@@ -2,6 +2,7 @@
 using Battles.Entities.Player;
 using Battles.Scoring;
 using Core;
+using Highscores;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
@@ -14,41 +15,25 @@ namespace Battles.UI
     {
         [SerializeField]
         private TextMeshProUGUI playerScore;
-        
-        [SerializeField]
-        private TextMeshProUGUI highScore;
 
         [SerializeField]
         private Button mainMenuButton;
+        
+        [SerializeField]
+        private Button addHighScoreButton;
 
-        private IScoreProvider scoreProvider;
         private SignalBus signalBus;
+        private IScoreProvider scoreProvider;
+        private IHighScoresKeeper highScoresKeeper;
 
         [Inject, UsedImplicitly]
-        private void Construct(SignalBus signalBus, IScoreProvider scoreProvider)
+        private void Construct(SignalBus signalBus, IScoreProvider scoreProvider, IHighScoresKeeper highScoresKeeper)
         {
             this.signalBus = signalBus;
             this.scoreProvider = scoreProvider;
+            this.highScoresKeeper = highScoresKeeper;
 
             signalBus.Subscribe<PlayerDiedSignal>(OnPlayerDied);
-        }
-
-        private void Awake()
-        {
-            mainMenuButton.onClick.AddListener(OnMainButtonClicked);
-        }
-
-        private void OnMainButtonClicked()
-        {
-            Debug.Log("Clicked");
-            signalBus.Fire<LoadMainMenuSignal>();
-        }
-
-        private void OnPlayerDied()
-        {
-            playerScore.text = scoreProvider.GetScore().ToString();
-            Time.timeScale = 0f;
-            gameObject.SetActive(true);
         }
 
         private void Start()
@@ -56,11 +41,47 @@ namespace Battles.UI
             gameObject.SetActive(false);   
         }
 
+        private void Awake()
+        {
+            mainMenuButton.onClick.AddListener(OnMainButtonClicked);
+            addHighScoreButton.onClick.AddListener(OnNewHighScoreClicked);
+        }
+
+        private void OnNewHighScoreClicked()
+        {
+            signalBus.Fire(new NewHighScoreSignal(scoreProvider.GetScore()));
+        }
+
+        private void OnPlayerDied()
+        {
+            var score = scoreProvider.GetScore();
+            playerScore.text = score.ToString();
+
+            DisplayApropriateExitButton(score);
+            
+            Time.timeScale = 0f;
+            gameObject.SetActive(true);
+        }
+
+        private void DisplayApropriateExitButton(int score)
+        {
+            var isNewHighScore = highScoresKeeper.IsHighScore(score);
+            Debug.Log($"Score {score} is a new highscore {isNewHighScore}");
+            mainMenuButton.gameObject.SetActive(!isNewHighScore);
+            addHighScoreButton.gameObject.SetActive(isNewHighScore);
+        }
+
+        private void OnMainButtonClicked()
+        {
+            signalBus.Fire<LoadMainMenuSignal>();
+        }
+
         private void OnDestroy()
         {
             Time.timeScale = 1f;
             signalBus.Unsubscribe<PlayerDiedSignal>(OnPlayerDied);
             mainMenuButton.onClick.RemoveListener(OnMainButtonClicked);
+            addHighScoreButton.onClick.RemoveListener(OnNewHighScoreClicked);
         }
     }
 }

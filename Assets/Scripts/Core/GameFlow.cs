@@ -1,4 +1,5 @@
 ﻿using System;
+using Highscores;
 using JetBrains.Annotations;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -10,6 +11,7 @@ namespace Core
     {
         private const int MainMenuSceneIndex = 1;
         private const int BattleSceneIndex = 2;
+        private const int LeaderboardsSceneIndex = 3;
 
         private readonly SignalBus signalBus;
 
@@ -20,6 +22,12 @@ namespace Core
             signalBus.Subscribe<DependenciesLoadedSignal>(LoadMainMenu);
             signalBus.Subscribe<StartGameSignal>(OnStartGameSignalReceived);
             signalBus.Subscribe<LoadMainMenuSignal>(LoadMainMenu);
+            signalBus.Subscribe<NewHighScoreSignal>(OnNewHighScore);
+        }
+
+        private void OnNewHighScore(NewHighScoreSignal signal)
+        {
+            LoadScene(LeaderboardsSceneIndex);
         }
 
         private void LoadMainMenu()
