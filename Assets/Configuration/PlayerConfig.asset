@@ -15,4 +15,5 @@ MonoBehaviour:
   moveMultiplier: 4
   projectileVelocity: 8
   projectileLifetime: 3
-  maxShootingFrequency: 0.3
+  livesTotal: 3
+  minShootingInterval: 0.3

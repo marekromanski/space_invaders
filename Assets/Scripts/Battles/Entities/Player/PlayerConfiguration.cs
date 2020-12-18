@@ -15,6 +15,9 @@ namespace Battles.Entities.Player
         [SerializeField]
         private float projectileLifetime;
 
+        [SerializeField]
+        private int livesTotal;
+
         [FormerlySerializedAs("maxShootingFrequency")] [SerializeField]
         private float minShootingInterval;
 
@@ -22,5 +25,7 @@ namespace Battles.Entities.Player
         public float ProjectileVelocity => projectileVelocity;
         public float ProjectileLifetime => projectileLifetime;
         public float MinShootingInterval => minShootingInterval;
+
+        public int LivesTotal => livesTotal;
     }
 }

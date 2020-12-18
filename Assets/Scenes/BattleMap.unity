@@ -324,6 +324,7 @@ GameObject:
   - component: {fileID: 325439455}
   - component: {fileID: 325439454}
   - component: {fileID: 325439453}
+  - component: {fileID: 325439456}
   m_Layer: 0
   m_Name: BattleMapCanvas
   m_TagString: Untagged
@@ -412,6 +413,21 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &325439456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325439451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d0a74298d59c9942a1ffe4e34a535ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerLives: {fileID: 831897303}
+  currentScore: {fileID: 527985606}
+  highScore: {fileID: 1242339097}
 --- !u!1 &437412362
 GameObject:
   m_ObjectHideFlags: 0

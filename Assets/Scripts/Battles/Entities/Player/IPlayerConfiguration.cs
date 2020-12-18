@@ -2,5 +2,6 @@
 {
     public interface IPlayerConfiguration : ICharacterConfiguration
     {
+        int LivesTotal { get; }
     }
 }

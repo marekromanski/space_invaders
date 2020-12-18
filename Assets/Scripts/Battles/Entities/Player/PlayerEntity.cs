@@ -16,6 +16,8 @@ namespace Battles.Entities.Player
         private IPlayerConfiguration playerConfiguration;
         private ShootingComponent shootingomponent;
 
+        private int livesRemaining;
+
         private void Awake()
         {
             Assert.IsNotNull(projectileSpawnPosition);
@@ -26,6 +28,8 @@ namespace Battles.Entities.Player
         {
             this.signalBus = signalBus;
             this.playerConfiguration = playerConfiguration;
+
+            livesRemaining = playerConfiguration.LivesTotal;
 
             AddShootingComponent();
 
@@ -53,6 +57,19 @@ namespace Battles.Entities.Player
 
             transform.position = Vector3.Lerp(currentPosition, targetPosition,
                 Time.deltaTime * playerConfiguration.MoveSpeed);
+        }
+
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.CompareTag(Tags.PROJECTILE) || other.gameObject.CompareTag(Tags.ENEMY))
+            {
+                livesRemaining--;
+                signalBus.Fire(new PlayerLivesAmountChangedSignal(livesRemaining));
+                if (livesRemaining == 0)
+                {
+                    // signalBus.Fire<PlayerDiedSignal>();
+                }
+            }
         }
 
         private void OnDestroy()
