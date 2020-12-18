@@ -1,10 +1,11 @@
 ﻿using Battles.Entities.Player;
+using Battles.Scoring;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using Zenject;
 
-namespace Battles
+namespace Battles.UI
 {
     public class BattleHud : MonoBehaviour
     {
@@ -26,6 +27,12 @@ namespace Battles
             playerLives.text = playerConfiguration.LivesTotal.ToString();
             
             signalBus.Subscribe<PlayerLivesAmountChangedSignal>(OnPlayerLivesChanged);
+            signalBus.Subscribe<PlayerScoreChangedSignal>(OnPlayerScoreChanged);
+        }
+
+        private void OnPlayerScoreChanged(PlayerScoreChangedSignal signal)
+        {
+            currentScore.text = signal.newScore.ToString();
         }
 
         private void OnPlayerLivesChanged(PlayerLivesAmountChangedSignal signal)
@@ -36,6 +43,13 @@ namespace Battles
         void Start()
         {
             currentScore.text = 0.ToString();
+        }
+
+        private void OnDestroy()
+        {
+            signalBus.Unsubscribe<PlayerLivesAmountChangedSignal>(OnPlayerLivesChanged);
+            signalBus.Unsubscribe<PlayerScoreChangedSignal>(OnPlayerScoreChanged);
+
         }
     }
 }

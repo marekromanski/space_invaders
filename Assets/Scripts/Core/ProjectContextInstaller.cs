@@ -1,4 +1,5 @@
 ﻿using AssetManagement;
+using Battles.UI;
 using UnityEngine;
 using Zenject;
 
@@ -15,6 +16,7 @@ namespace Core
 
             Container.DeclareSignal<StartGameSignal>();
             Container.DeclareSignal<DependenciesLoadedSignal>();
+            Container.DeclareSignal<LoadMainMenuSignal>();
 
             Container.BindInterfacesAndSelfTo<GameFlow>().AsSingle().NonLazy();
             Container.Bind<IAssetCache>().FromInstance(assetCache).AsSingle();

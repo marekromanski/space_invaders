@@ -17,11 +17,12 @@ namespace Core
         {
             this.signalBus = signalBus;
 
-            signalBus.Subscribe<DependenciesLoadedSignal>(OnDependenciesLoaded);
+            signalBus.Subscribe<DependenciesLoadedSignal>(LoadMainMenu);
             signalBus.Subscribe<StartGameSignal>(OnStartGameSignalReceived);
+            signalBus.Subscribe<LoadMainMenuSignal>(LoadMainMenu);
         }
 
-        private void OnDependenciesLoaded()
+        private void LoadMainMenu()
         {
             LoadScene(MainMenuSceneIndex);
         }
@@ -31,15 +32,16 @@ namespace Core
             LoadScene(BattleSceneIndex);
         }
 
-        public void Dispose()
-        {
-            signalBus.Unsubscribe<DependenciesLoadedSignal>(OnDependenciesLoaded);
-            signalBus.Unsubscribe<StartGameSignal>(OnStartGameSignalReceived);
-        }
-
         private static void LoadScene(int sceneIndex)
         {
             SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Single);
+        }
+
+        public void Dispose()
+        {
+            signalBus.Unsubscribe<DependenciesLoadedSignal>(LoadMainMenu);
+            signalBus.Unsubscribe<StartGameSignal>(OnStartGameSignalReceived);
+            signalBus.Unsubscribe<LoadMainMenuSignal>(LoadMainMenu);
         }
     }
 }

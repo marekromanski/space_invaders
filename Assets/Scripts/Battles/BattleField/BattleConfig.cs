@@ -2,7 +2,7 @@
 using Battles.Entities.Enemies;
 using UnityEngine;
 
-namespace Battles
+namespace Battles.BattleField
 {
     [CreateAssetMenu(menuName = "SpaceInvaders/BattleConfig", fileName = "BattleConfig")]
     public class BattleConfig : ScriptableObject, IBattleConfig

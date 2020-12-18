@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;
 
-namespace Battles
+namespace Battles.BattleField
 {
     public class BattleOrganizer : MonoBehaviour
     {

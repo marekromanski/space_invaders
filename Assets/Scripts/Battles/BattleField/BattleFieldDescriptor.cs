@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Battles
+namespace Battles.BattleField
 {
     public class BattleFieldDescriptor : MonoBehaviour, IBattleFieldDescriptor
     {

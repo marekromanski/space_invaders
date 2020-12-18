@@ -155,6 +155,11 @@ namespace Battles.Entities.Enemies
         {
             signalBus.Unsubscribe<EnemySpawnedSignal>(OnEnemySpawned);
             signalBus.Unsubscribe<EnemyDestroyedSignal>(OnEnemyDestroyed);
+
+            foreach (var row in enemiesByRows.Values)
+            {
+                row.Dispose();
+            }
         }
 
         private class AimingResult

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Battles.BattleField;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using JetBrains.Annotations;
@@ -9,7 +10,7 @@ using Zenject;
 
 namespace Battles.Entities.Enemies
 {
-    public class EnemiesRow
+    public class EnemiesRow : IDisposable
     {
         private readonly EnemyType type;
         private readonly List<EnemyEntity> enemies;
@@ -18,6 +19,7 @@ namespace Battles.Entities.Enemies
         private EnemyEntity leftmostEntity;
         private EnemyEntity rightmostEntity;
         private IEnemiesConfiguration enemiesConfiguration;
+        private Sequence currentSequence;
 
         private const float PositionDelta = 0.1f;
 
@@ -35,7 +37,7 @@ namespace Battles.Entities.Enemies
             this.battleFieldDescriptor = battleFieldDescriptor;
             this.enemiesConfiguration = enemiesConfiguration;
 
-            StartMoving().Forget();
+             StartMoving().Forget();
         }
 
         private async UniTask StartMoving()
@@ -91,15 +93,15 @@ namespace Battles.Entities.Enemies
 
         private async UniTask TakeAStep(float finalStepSize)
         {
-            Sequence sequence = DOTween.Sequence();
+            currentSequence = DOTween.Sequence();
             foreach (var enemy in enemies)
             {
                 var tween = enemy.transform.DOMoveX(enemy.transform.position.x + finalStepSize, enemiesConfiguration.StepTime);
-                sequence.Join(tween);
+                currentSequence.Join(tween);
             }
 
-            sequence.Play();
-            await sequence.AsyncWaitForCompletion().AsUniTask();
+            currentSequence.Play();
+            await currentSequence.AsyncWaitForCompletion().AsUniTask();
         }
 
         private bool CanMoveLeft()
@@ -175,6 +177,15 @@ namespace Battles.Entities.Enemies
             {
                 rightmostEntity = entity;
             }
+        }
+
+        public void Dispose()
+        {
+            leftmostEntity = null;
+            rightmostEntity = null;
+            enemies.Clear();
+            
+            currentSequence.Kill();
         }
     }
 }

@@ -67,7 +67,7 @@ namespace Battles.Entities.Player
                 signalBus.Fire(new PlayerLivesAmountChangedSignal(livesRemaining));
                 if (livesRemaining == 0)
                 {
-                    // signalBus.Fire<PlayerDiedSignal>();
+                    signalBus.Fire<PlayerDiedSignal>();
                 }
             }
         }

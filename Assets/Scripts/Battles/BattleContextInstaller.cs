@@ -1,6 +1,8 @@
-﻿using Battles.Entities.Enemies;
+﻿using Battles.BattleField;
+using Battles.Entities.Enemies;
 using Battles.Entities.Player;
 using Battles.Entities.Projectiles;
+using Battles.Scoring;
 using UnityEngine;
 using Zenject;
 
@@ -16,6 +18,9 @@ namespace Battles
 
         [SerializeField]
         private BattleConfig battleConfig;
+        
+        [SerializeField]
+        private ScoringConfiguration scoringConfig;
 
         [SerializeField]
         private BattleFieldDescriptor battleFieldDescriptor;
@@ -25,6 +30,7 @@ namespace Battles
             DeclareSignals();
 
             Container.BindInterfacesAndSelfTo<EditorControls>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ScoreCalculator>().AsSingle().NonLazy();
 
             Container.Bind<IBattleFieldDescriptor>().FromInstance(battleFieldDescriptor).AsSingle();
 
@@ -46,6 +52,8 @@ namespace Battles
             Container.DeclareSignal<EnemyDestroyedSignal>();
             Container.DeclareSignal<WaveFinishedSignal>();
             Container.DeclareSignal<PlayerLivesAmountChangedSignal>();
+            Container.DeclareSignal<PlayerDiedSignal>();
+            Container.DeclareSignal<PlayerScoreChangedSignal>();
         }
 
         private void BindSpawners()
@@ -61,6 +69,7 @@ namespace Battles
             Container.Bind<IPlayerConfiguration>().FromInstance(playerConfiguration).AsSingle();
             Container.Bind<IEnemiesConfiguration>().FromInstance(enemiesConfiguration).AsSingle();
             Container.Bind<IBattleConfig>().FromInstance(battleConfig).AsSingle();
+            Container.Bind<IScoringConfiguration>().FromInstance(scoringConfig).AsSingle();
         }
     }
 }

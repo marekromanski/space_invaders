@@ -1,6 +1,6 @@
 ﻿using Battles.Entities.Enemies;
 
-namespace Battles
+namespace Battles.BattleField
 {
     public interface IBattleConfig
     {
