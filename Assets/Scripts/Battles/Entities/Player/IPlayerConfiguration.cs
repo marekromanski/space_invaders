@@ -3,5 +3,7 @@
     public interface IPlayerConfiguration : ICharacterConfiguration
     {
         int LivesTotal { get; }
+
+        float InvulnerabilityDuration { get; }
     }
 }

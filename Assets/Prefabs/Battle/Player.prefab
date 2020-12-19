@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpawnPosition: {fileID: 6758519517974861176}
+  transparentMaterial: {fileID: 2100000, guid: 4ee7ae0e002558049ac184a343078323, type: 2}
 --- !u!65 &1512694329913928710
 BoxCollider:
   m_ObjectHideFlags: 0

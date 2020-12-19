@@ -1,5 +1,7 @@
-﻿using Battles.Entities.Projectiles;
+﻿using System;
+using Battles.Entities.Projectiles;
 using Battles.Mechanics.Shooting;
+using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -12,11 +14,15 @@ namespace Battles.Entities.Player
         [SerializeField]
         private Transform projectileSpawnPosition;
 
+        [SerializeField]
+        private Material transparentMaterial;
+
         private SignalBus signalBus;
         private IPlayerConfiguration playerConfiguration;
         private ShootingComponent shootingomponent;
 
         private int livesRemaining;
+        private bool isInvulnerabilityEnabled;
 
         private void Awake()
         {
@@ -61,15 +67,40 @@ namespace Battles.Entities.Player
 
         private void OnCollisionEnter(Collision other)
         {
-            if (other.gameObject.CompareTag(Tags.PROJECTILE) || other.gameObject.CompareTag(Tags.ENEMY))
+            if (CanBeDamaged())
             {
-                livesRemaining--;
-                signalBus.Fire(new PlayerLivesAmountChangedSignal(livesRemaining));
-                if (livesRemaining == 0)
+                if (other.gameObject.CompareTag(Tags.PROJECTILE) || other.gameObject.CompareTag(Tags.ENEMY))
                 {
-                    signalBus.Fire<PlayerDiedSignal>();
+                    livesRemaining--;
+                    signalBus.Fire(new PlayerLivesAmountChangedSignal(livesRemaining));
+                    if (livesRemaining == 0)
+                    {
+                        signalBus.Fire<PlayerDiedSignal>();
+                    }
+                    else
+                    {
+                        EnableInvulnerability().Forget();
+                    }
                 }
             }
+        }
+
+        private async UniTask EnableInvulnerability()
+        {
+            isInvulnerabilityEnabled = true;
+
+            var renderer = GetComponentInChildren<MeshRenderer>();
+            var material = renderer.material;
+            renderer.material = transparentMaterial;
+
+            await UniTask.Delay(TimeSpan.FromSeconds(playerConfiguration.InvulnerabilityDuration));
+            renderer.material = material;
+            isInvulnerabilityEnabled = false;
+        }
+
+        private bool CanBeDamaged()
+        {
+            return !isInvulnerabilityEnabled;
         }
 
         private void OnDestroy()
