@@ -1,5 +1,6 @@
 ﻿using Battles.Entities.Player;
 using Battles.Scoring;
+using Highscores;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
@@ -13,6 +14,9 @@ namespace Battles.UI
         private TextMeshProUGUI playerLives;
 
         [SerializeField]
+        private TextMeshProUGUI waveNumber;
+
+        [SerializeField]
         private TextMeshProUGUI currentScore;
 
         [SerializeField]
@@ -21,13 +25,20 @@ namespace Battles.UI
         private SignalBus signalBus;
 
         [Inject, UsedImplicitly]
-        private void Construct(SignalBus signalBus, IPlayerConfiguration playerConfiguration)
+        private void Construct(SignalBus signalBus, IPlayerConfiguration playerConfiguration, IHighScoresKeeper highScoresKeeper)
         {
             this.signalBus = signalBus;
             playerLives.text = playerConfiguration.LivesTotal.ToString();
+            highScore.text = highScoresKeeper.GetCurrenHighScore().ToString();
             
             signalBus.Subscribe<PlayerLivesAmountChangedSignal>(OnPlayerLivesChanged);
             signalBus.Subscribe<PlayerScoreChangedSignal>(OnPlayerScoreChanged);
+            signalBus.Subscribe<WaveSpawnedSignal>(OnWaveSpawned);
+        }
+
+        private void OnWaveSpawned(WaveSpawnedSignal signal)
+        {
+            waveNumber.text = signal.currentWave.ToString();
         }
 
         private void OnPlayerScoreChanged(PlayerScoreChangedSignal signal)
@@ -49,7 +60,7 @@ namespace Battles.UI
         {
             signalBus.Unsubscribe<PlayerLivesAmountChangedSignal>(OnPlayerLivesChanged);
             signalBus.Unsubscribe<PlayerScoreChangedSignal>(OnPlayerScoreChanged);
-
+            signalBus.Unsubscribe<WaveSpawnedSignal>(OnWaveSpawned);
         }
     }
 }

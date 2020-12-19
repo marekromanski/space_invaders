@@ -8,5 +8,6 @@ namespace Highscores
         void AddNewHighScore(string name);
         bool HasPendingHighScore();
         List<HighScoreEntry> GetHighScores();
+        int GetCurrenHighScore();
     }
 }

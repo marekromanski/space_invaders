@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Battles.Entities;
 using Battles.Entities.Enemies;
+using Battles.UI;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -17,12 +18,14 @@ namespace Battles.BattleField
         private IEntitiesFactory factory;
         private DiContainer diContainer;
 
-        private readonly Dictionary<EnemyType, IEnemySpawner> enemySpawners =
-            new Dictionary<EnemyType, IEnemySpawner>(3);
-
         private SignalBus signalBus;
         private IBattleConfig battleConfig;
         private IBattleFieldDescriptor battleFieldDescriptor;
+
+        private readonly Dictionary<EnemyType, IEnemySpawner> enemySpawners =
+            new Dictionary<EnemyType, IEnemySpawner>(3);
+
+        private int currentWave = 0;
 
         [Inject, UsedImplicitly]
         private void Construct(IBattleFieldDescriptor battleFieldDescriptor, IBattleConfig battleConfig,
@@ -57,6 +60,8 @@ namespace Battles.BattleField
 
         private void SpawnWave()
         {
+            currentWave++;
+            
             int totalEnemiesRows = battleConfig.GetAmountOfRegularRows() + 2;
             float rowHeight = (battleFieldDescriptor.TopSpawnBorder - battleFieldDescriptor.BotSpawnBorder) / totalEnemiesRows;
 
@@ -70,6 +75,8 @@ namespace Battles.BattleField
                 float regularRowPositionY = CalculateRowPositionY(i, rowHeight);
                 SpawnRowOfEnemies(regularRowPositionY, EnemyType.Regular, i);
             }
+            
+            signalBus.Fire(new WaveSpawnedSignal(currentWave));
         }
 
         private float CalculateRowPositionY(int index, float rowHeight)

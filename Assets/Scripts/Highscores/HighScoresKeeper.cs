@@ -103,6 +103,16 @@ namespace Highscores
             return entries.ToList();
         }
 
+        public int GetCurrenHighScore()
+        {
+            if (entries.Count > 0)
+            {
+                return entries[0].score;
+            }
+
+            return 0;
+        }
+
         private int FindIndexOfNewEntry(int newEntryScore)
         {
             for (int i = 0; i < entries.Count; ++i)

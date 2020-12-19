@@ -54,6 +54,7 @@ namespace Battles
             Container.DeclareSignal<PlayerLivesAmountChangedSignal>();
             Container.DeclareSignal<PlayerDiedSignal>();
             Container.DeclareSignal<PlayerScoreChangedSignal>();
+            Container.DeclareSignal<WaveSpawnedSignal>();
         }
 
         private void BindSpawners()
