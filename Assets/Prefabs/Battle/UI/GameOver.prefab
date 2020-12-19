@@ -187,8 +187,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b86d6b4d5753484490eafd761b152deb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerScore: {fileID: 6939347017596765985}
   wavesBeaten: {fileID: 2628374657307693807}
+  playerScore: {fileID: 6939347017596765985}
+  highScore: {fileID: 6939347018624744429}
   mainMenuButton: {fileID: 6939347017907821947}
   addHighScoreButton: {fileID: 8935302670165776024}
 --- !u!225 &6939347017204735484
