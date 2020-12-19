@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Battles.Entities;
 using Battles.Entities.Enemies;
-using Battles.UI;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -10,7 +9,7 @@ using Zenject;
 
 namespace Battles.BattleField
 {
-    public class BattleOrganizer : MonoBehaviour
+    public class BattleOrganizer : MonoBehaviour, IWavesCounter
     {
         [SerializeField]
         private Transform playerSpawnPosition;
@@ -28,9 +27,13 @@ namespace Battles.BattleField
         private int currentWave = 0;
 
         [Inject, UsedImplicitly]
-        private void Construct(IBattleFieldDescriptor battleFieldDescriptor, IBattleConfig battleConfig,
-            SignalBus signalBus, IEntitiesFactory factory, DiContainer diContainer,
-            IMothershipSpawner mothershipSpawner, IEliteEnemySpawner eliteEnemySpawner,
+        private void Construct(IBattleFieldDescriptor battleFieldDescriptor,
+            IBattleConfig battleConfig,
+            SignalBus signalBus,
+            IEntitiesFactory factory,
+            DiContainer diContainer,
+            IMothershipSpawner mothershipSpawner,
+            IEliteEnemySpawner eliteEnemySpawner,
             IRegularEnemySpawner regularEnemySpawner)
         {
             this.battleConfig = battleConfig;
@@ -117,5 +120,21 @@ namespace Battles.BattleField
         {
             signalBus.Unsubscribe<WaveFinishedSignal>(OnWaveFinished);
         }
+
+        public int GetAmountOfWavesBeaten()
+        {
+            return currentWave - 1;
+        }
+
+        public int GetCurrentWaveNumber()
+        {
+            return currentWave;
+        }
+    }
+
+    public interface IWavesCounter
+    {
+        int GetAmountOfWavesBeaten();
+        int GetCurrentWaveNumber();
     }
 }

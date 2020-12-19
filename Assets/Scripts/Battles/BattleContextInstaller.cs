@@ -25,6 +25,9 @@ namespace Battles
         [SerializeField]
         private BattleFieldDescriptor battleFieldDescriptor;
 
+        [SerializeField]
+        private BattleOrganizer battleOrganizer;
+
         public override void InstallBindings()
         {
             DeclareSignals();
@@ -33,6 +36,7 @@ namespace Battles
             Container.BindInterfacesAndSelfTo<ScoreCalculator>().AsSingle().NonLazy();
 
             Container.Bind<IBattleFieldDescriptor>().FromInstance(battleFieldDescriptor).AsSingle();
+            Container.Bind<IWavesCounter>().FromInstance(battleOrganizer).AsSingle();
 
             BindSpawners();
 

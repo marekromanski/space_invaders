@@ -1,4 +1,5 @@
-﻿using Battles.Entities.Player;
+﻿using Battles.BattleField;
+using Battles.Entities.Player;
 using Battles.Scoring;
 using Highscores;
 using JetBrains.Annotations;
@@ -25,12 +26,16 @@ namespace Battles.UI
         private SignalBus signalBus;
 
         [Inject, UsedImplicitly]
-        private void Construct(SignalBus signalBus, IPlayerConfiguration playerConfiguration, IHighScoresKeeper highScoresKeeper)
+        private void Construct(SignalBus signalBus,
+            IPlayerConfiguration playerConfiguration,
+            IHighScoresKeeper highScoresKeeper,
+            IWavesCounter wavesCounter)
         {
             this.signalBus = signalBus;
             playerLives.text = playerConfiguration.LivesTotal.ToString();
             highScore.text = highScoresKeeper.GetCurrenHighScore().ToString();
-            
+            waveNumber.text = wavesCounter.GetCurrentWaveNumber().ToString();
+
             signalBus.Subscribe<PlayerLivesAmountChangedSignal>(OnPlayerLivesChanged);
             signalBus.Subscribe<PlayerScoreChangedSignal>(OnPlayerScoreChanged);
             signalBus.Subscribe<WaveSpawnedSignal>(OnWaveSpawned);

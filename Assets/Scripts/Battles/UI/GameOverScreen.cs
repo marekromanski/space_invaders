@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Battles.BattleField;
 using Battles.Entities.Player;
 using Battles.Scoring;
 using Core;
@@ -14,7 +14,13 @@ namespace Battles.UI
     public class GameOverScreen : MonoBehaviour
     {
         [SerializeField]
+        private TextMeshProUGUI wavesBeaten;
+
+        [SerializeField]
         private TextMeshProUGUI playerScore;
+
+        [SerializeField]
+        private TextMeshProUGUI highScore;
 
         [SerializeField]
         private Button mainMenuButton;
@@ -25,13 +31,15 @@ namespace Battles.UI
         private SignalBus signalBus;
         private IScoreProvider scoreProvider;
         private IHighScoresKeeper highScoresKeeper;
+        private IWavesCounter wavesCounter;
 
         [Inject, UsedImplicitly]
-        private void Construct(SignalBus signalBus, IScoreProvider scoreProvider, IHighScoresKeeper highScoresKeeper)
+        private void Construct(SignalBus signalBus, IWavesCounter wavesCounter, IScoreProvider scoreProvider, IHighScoresKeeper highScoresKeeper)
         {
             this.signalBus = signalBus;
             this.scoreProvider = scoreProvider;
             this.highScoresKeeper = highScoresKeeper;
+            this.wavesCounter = wavesCounter;
 
             signalBus.Subscribe<PlayerDiedSignal>(OnPlayerDied);
         }
@@ -54,9 +62,11 @@ namespace Battles.UI
 
         private void OnPlayerDied()
         {
+            wavesBeaten.text = wavesCounter.GetAmountOfWavesBeaten().ToString();
+            highScore.text = highScoresKeeper.GetCurrenHighScore().ToString();
+
             var score = scoreProvider.GetScore();
             playerScore.text = score.ToString();
-
             DisplayApropriateExitButton(score);
             
             Time.timeScale = 0f;
@@ -66,7 +76,6 @@ namespace Battles.UI
         private void DisplayApropriateExitButton(int score)
         {
             var isNewHighScore = highScoresKeeper.IsHighScore(score);
-            Debug.Log($"Score {score} is a new highscore {isNewHighScore}");
             mainMenuButton.gameObject.SetActive(!isNewHighScore);
             addHighScoreButton.gameObject.SetActive(isNewHighScore);
         }

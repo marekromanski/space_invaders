@@ -780,6 +780,7 @@ MonoBehaviour:
   battleConfig: {fileID: 11400000, guid: c70c8a49938f06646b8d18cda9cd60bf, type: 2}
   scoringConfig: {fileID: 11400000, guid: cc9e28003ae50eb4080f87f8f90ccff2, type: 2}
   battleFieldDescriptor: {fileID: 655839116}
+  battleOrganizer: {fileID: 231342774}
 --- !u!1 &655839114
 GameObject:
   m_ObjectHideFlags: 0
@@ -1923,7 +1924,7 @@ PrefabInstance:
     - target: {fileID: 6939347017204735485, guid: a211f2d07f32dfb45b21236d8fb7d4b0,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6939347017204735485, guid: a211f2d07f32dfb45b21236d8fb7d4b0,
         type: 3}
